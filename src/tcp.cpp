@@ -156,7 +156,14 @@ int zmq::tcp_write (fd_t s_, const void *data_, size_t size_)
 {
 #ifdef ZMQ_HAVE_WINDOWS
 
-    int nbytes = send (s_, (char*) data_, (int) size_, 0);
+    // Circumvent issue https://support.microsoft.com/en-us/kb/201213 
+    // (see also https://zeromq.jira.com/browse/LIBZMQ-195) by limiting
+    // the maximum number of bytes to try.
+    const int maxBytes = 1024 * 1024;
+    const int allBytes = (int) size_;
+    const int bytesToTry = (allBytes < maxBytes) ? allBytes : maxBytes;
+
+    const int nbytes = send (s_, (char*) data_, bytesToTry, 0);
 
     //  If not a single byte can be written to the socket in non-blocking mode
     //  we'll get an error (this may happen during the speculative write).
