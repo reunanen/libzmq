@@ -182,7 +182,10 @@ void zmq::select_t::loop ()
 #ifdef ZMQ_HAVE_WINDOWS
         int rc = select (0, &readfds, &writefds, &exceptfds,
             timeout ? &tv : NULL);
-        wsa_assert (rc != SOCKET_ERROR);
+        if (rc == SOCKET_ERROR) {
+            wsa_assert (GetLastError() == WSAEINTR);
+            continue;
+        }
 #else
         int rc = select (maxfd + 1, &readfds, &writefds, &exceptfds,
             timeout ? &tv : NULL);
