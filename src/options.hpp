@@ -79,6 +79,10 @@ namespace zmq
         // Sets the time-to-live field in every multicast packet sent.
         int multicast_hops;
 
+        // Sets the maximum transport data unit size in every multicast
+        // packet sent.
+        int multicast_maxtpdu;
+
         // SO_SNDBUF and SO_RCVBUF to be passed to underlying transport sockets.
         int sndbuf;
         int rcvbuf;
@@ -91,6 +95,16 @@ namespace zmq
 
         //  Linger time, in milliseconds.
         int linger;
+
+        //  Maximum interval in milliseconds beyond which userspace will
+        //  timeout connect().
+        //  Default 0 (unused)
+        int connect_timeout;
+
+        //  Maximum interval in milliseconds beyond which TCP will timeout
+        //  retransmitted packets.
+        //  Default 0 (unused)
+        int tcp_retransmit_timeout;
 
         //  Minimum interval between attempts to reconnect, in milliseconds.
         //  Default 100ms
@@ -132,7 +146,7 @@ namespace zmq
         bool raw_socket;
         bool raw_notify;        //  Provide connect notifications
 
-        //  Addres of SOCKS proxy
+        //  Address of SOCKS proxy
         std::string socks_proxy_address;
 
         //  TCP keep-alive settings.
@@ -145,6 +159,10 @@ namespace zmq
         // TCP accept() filters
         typedef std::vector <tcp_address_mask_t> tcp_accept_filters_t;
         tcp_accept_filters_t tcp_accept_filters;
+
+        // TCP buffer sizes
+        unsigned int tcp_recv_buffer_size;
+        unsigned int tcp_send_buffer_size;
 
         // IPC accept() filters
 #       if defined ZMQ_HAVE_SO_PEERCRED || defined ZMQ_HAVE_LOCAL_PEERCRED
@@ -207,6 +225,12 @@ namespace zmq
         //  Time in milliseconds to wait for a PING response before disconnecting
         int heartbeat_timeout;
 
+#       if defined ZMQ_HAVE_VMCI
+        uint64_t vmci_buffer_size;
+        uint64_t vmci_buffer_min_size;
+        uint64_t vmci_buffer_max_size;
+        int vmci_connect_timeout;
+#       endif
     };
 }
 

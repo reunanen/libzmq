@@ -235,6 +235,12 @@
     <ClCompile Include="..\..\..\..\src\mailbox_safe.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\src\decoder_allocators.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+	<ClCompile Include="..\..\..\..\src\socket_poller.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\include\zmq_utils.h">
@@ -511,6 +517,9 @@
       <Filter>src\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\src\condition_variable.hpp">
+      <Filter>src\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\decoder_allocators.hpp">
       <Filter>src\include</Filter>
     </ClInclude>
   </ItemGroup>

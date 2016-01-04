@@ -27,20 +27,27 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "macros.hpp"
 #include "platform.hpp"
 #include "address.hpp"
+#include "ctx.hpp"
 #include "err.hpp"
 #include "tcp_address.hpp"
 #include "ipc_address.hpp"
 #include "tipc_address.hpp"
 
+#if defined ZMQ_HAVE_VMCI
+#include "vmci_address.hpp"
+#endif
+
 #include <string>
 #include <sstream>
 
 zmq::address_t::address_t (
-    const std::string &protocol_, const std::string &address_)
+    const std::string &protocol_, const std::string &address_, ctx_t *parent_)
     : protocol (protocol_),
-      address (address_)
+      address (address_),
+      parent (parent_)
 {
     memset (&resolved, 0, sizeof resolved);
 }
@@ -49,16 +56,14 @@ zmq::address_t::~address_t ()
 {
     if (protocol == "tcp") {
         if (resolved.tcp_addr) {
-            delete resolved.tcp_addr;
-            resolved.tcp_addr = 0;
+            LIBZMQ_DELETE(resolved.tcp_addr);
         }
     }
 #if !defined ZMQ_HAVE_WINDOWS && !defined ZMQ_HAVE_OPENVMS
     else
     if (protocol == "ipc") {
         if (resolved.ipc_addr) {
-            delete resolved.ipc_addr;
-            resolved.ipc_addr = 0;
+            LIBZMQ_DELETE(resolved.ipc_addr);
         }
     }
 #endif
@@ -66,8 +71,15 @@ zmq::address_t::~address_t ()
     else
     if (protocol == "tipc") {
         if (resolved.tipc_addr) {
-            delete resolved.tipc_addr;
-            resolved.tipc_addr = 0;
+            LIBZMQ_DELETE(resolved.tipc_addr);
+        }
+    }
+#endif
+#if defined ZMQ_HAVE_VMCI
+    else
+    if (protocol == "vmci") {
+        if (resolved.vmci_addr) {
+            LIBZMQ_DELETE(resolved.vmci_addr);
         }
     }
 #endif
@@ -91,6 +103,13 @@ int zmq::address_t::to_string (std::string &addr_) const
     if (protocol == "tipc") {
         if (resolved.tipc_addr)
             return resolved.tipc_addr->to_string (addr_);
+    }
+#endif
+#if defined ZMQ_HAVE_VMCI
+    else
+    if (protocol == "vmci") {
+        if (resolved.vmci_addr)
+            return resolved.vmci_addr->to_string (addr_);
     }
 #endif
 

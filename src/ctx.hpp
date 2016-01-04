@@ -86,7 +86,7 @@ namespace zmq
         // (except zmq_close).
         // This function is non-blocking.
         // terminate must still be called afterwards.
-        // This function is optional, terminate will unblock any current 
+        // This function is optional, terminate will unblock any current
         // operations as well.
         int shutdown();
 
@@ -98,7 +98,7 @@ namespace zmq
         zmq::socket_base_t *create_socket (int type_);
         void destroy_socket (zmq::socket_base_t *socket_);
 
-		//  Start a new thread with proper scheduling parameters.
+        //  Start a new thread with proper scheduling parameters.
         void start_thread (thread_t &thread_, thread_fn *tfn_, void *arg_) const;
 
         //  Send command to the destination thread.
@@ -120,6 +120,11 @@ namespace zmq
         void pend_connection (const std::string &addr_,
                 const endpoint_t &endpoint_, pipe_t **pipes_);
         void connect_pending (const char *addr_, zmq::socket_base_t *bind_socket_);
+
+#ifdef ZMQ_HAVE_VMCI
+        // Return family for the VMCI socket or -1 if it's not available.
+        int get_vmci_socket_family ();
+#endif
 
         enum {
             term_tid = 0,
@@ -203,7 +208,7 @@ namespace zmq
         //  Is IPv6 enabled on this context?
         bool ipv6;
 
-		//  Thread scheduling parameters.
+        //  Thread scheduling parameters.
         int thread_priority;
         int thread_sched_policy;
 
@@ -219,6 +224,12 @@ namespace zmq
 #endif
         enum side { connect_side, bind_side };
         void connect_inproc_sockets(zmq::socket_base_t *bind_socket_, options_t& bind_options, const pending_connection_t &pending_connection_, side side_);
+
+#ifdef ZMQ_HAVE_VMCI
+        int vmci_fd;
+        int vmci_family;
+        mutex_t vmci_sync;
+#endif
     };
 
 }

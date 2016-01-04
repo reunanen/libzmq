@@ -63,6 +63,20 @@ Default value:: 100
 Applicable socket types:: all, only for connection-oriented transports
 
 
+ZMQ_CONNECT_TIMEOUT: Retrieve connect() timeout
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Retrieves how long to wait before timing-out a connect() system call.
+The connect() system call normally takes a long time before it returns a
+time out error. Setting this option allows the library to time out the call
+at an earlier interval.
+
+[horizontal]
+Option value type:: int
+Option value unit:: milliseconds
+Default value:: 0 (disabled)
+Applicable socket types:: all, when using TCP transports.
+
+
 ZMQ_CURVE_PUBLICKEY: Retrieve current CURVE public key
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -396,6 +410,21 @@ Default value:: 1
 Applicable socket types:: all, when using multicast transports
 
 
+ZMQ_MULTICAST_MAXTPDU: Maximum transport data unit size for multicast packets
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+The 'ZMQ_MULTICAST_MAXTPDU' option shall retrieve the maximum transport
+data unit size used for outbound multicast packets.
+
+This must be set at or below the minimum Maximum Transmission Unit (MTU) for
+all network paths over which multicast reception is required.
+
+[horizontal]
+Option value type:: int
+Option value unit:: bytes
+Default value:: 1500
+Applicable socket types:: all, when using multicast transports
+
+
 ZMQ_PLAIN_PASSWORD: Retrieve current password
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 The 'ZMQ_PLAIN_PASSWORD' option shall retrieve the last password set for
@@ -633,9 +662,9 @@ Default value:: -1 (leave to OS default)
 Applicable socket types:: all, when using TCP transports.
 
 
-ZMQ_TCP_KEEPALIVE_IDLE: Override TCP_KEEPCNT(or TCP_KEEPALIVE on some OS)
+ZMQ_TCP_KEEPALIVE_IDLE: Override TCP_KEEPIDLE (or TCP_KEEPALIVE on some OS)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Override 'TCP_KEEPCNT'(or 'TCP_KEEPALIVE' on some OS) socket option (where
+Override 'TCP_KEEPIDLE'(or 'TCP_KEEPALIVE' on some OS) socket option (where
 supported by OS). The default value of `-1` means to skip any overrides and
 leave it to OS default.
 
@@ -656,6 +685,33 @@ Option value type:: int
 Option value unit:: -1,>0
 Default value:: -1 (leave to OS default)
 Applicable socket types:: all, when using TCP transports.
+
+
+ZMQ_TCP_RETRANSMIT_TIMEOUT: Retrieve TCP Retransmit Timeout
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+On OSes where it is supported, retrieves how long before an unacknowledged TCP
+retransmit times out.
+The system normally attempts many TCP retransmits following an exponential
+backoff strategy. This means that after a network outage, it may take a long
+time before the session can be re-established. Setting this option allows
+the timeout to happen at a shorter interval.
+
+[horizontal]
+Option value type:: int
+Option value unit:: milliseconds
+Default value:: 0 (leave to OS default)
+Applicable socket types:: all, when using TCP transports.
+
+
+ZMQ_THREADSAFE: Retrieve socket thread safety
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+The 'ZMQ_THREADSAFE' option shall retrieve a boolean value indicating whether
+or not the socket is threadsafe. Currently 'ZMQ_CLIENT' and 'ZMQ_SERVER' sockets
+are threadsafe.
+
+[horizontal]
+Option value type:: boolean
+Applicable socket types:: all
 
 
 ZMQ_TOS: Retrieve the Type-of-Service socket override status
@@ -694,6 +750,79 @@ Option value type:: character string
 Option value unit:: N/A
 Default value:: not set
 Applicable socket types:: all, when using TCP transport
+
+ZMQ_TCP_RECV_BUFFER: Size of the TCP receive buffer
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+The 'ZMQ_TCP_RECV_BUFFER' specifies the maximum number of bytes which can
+be received by an individual syscall to receive data from the TCP socket.
+The default value is 8192.
+
+
+[horizontal]
+Option value type:: int
+Option value unit:: >0
+Default value:: 8192
+Applicable socket types:: all, when using TCP transport
+
+ZMQ_TCP_SEND_BUFFER: Size of the TCP receive buffer
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+The 'ZMQ_TCP_SEND_BUFFER' specifies the maximum number of bytes which can
+be sent by an individual syscall to transmit data to the TCP socket.
+The default value is 8192.
+
+
+[horizontal]
+Option value type:: int
+Option value unit:: >0
+Default value:: 8192
+Applicable socket types:: all, when using TCP transport
+
+ZMQ_VMCI_BUFFER_SIZE: Retrieve buffer size of the VMCI socket
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+The `ZMQ_VMCI_BUFFER_SIZE` option shall retrieve the size of the underlying
+buffer for the socket. Used during negotiation before the connection is established.
+
+[horizontal]
+Option value type:: uint64_t
+Option value unit:: bytes
+Default value:: 65546
+Applicable socket types:: all, when using VMCI transport
+
+
+ZMQ_VMCI_BUFFER_MIN_SIZE: Retrieve min buffer size of the VMCI socket
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+The `ZMQ_VMCI_BUFFER_MIN_SIZE` option shall retrieve the min size of the underlying
+buffer for the socket. Used during negotiation before the connection is established.
+
+[horizontal]
+Option value type:: uint64_t
+Option value unit:: bytes
+Default value:: 128
+Applicable socket types:: all, when using VMCI transport
+
+
+ZMQ_VMCI_BUFFER_MAX_SIZE: Retrieve max buffer size of the VMCI socket
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+The `ZMQ_VMCI_BUFFER_MAX_SIZE` option shall retrieve the max size of the underlying
+buffer for the socket. Used during negotiation before the connection is established.
+
+[horizontal]
+Option value type:: uint64_t
+Option value unit:: bytes
+Default value:: 262144
+Applicable socket types:: all, when using VMCI transport
+
+
+ZMQ_VMCI_CONNECT_TIMEOUT: Retrieve connection timeout of the VMCI socket
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+The `ZMQ_VMCI_CONNECT_TIMEOUT` option shall retrieve connection timeout
+for the socket.
+
+[horizontal]
+Option value type:: int
+Option value unit:: milliseconds
+Default value:: -1
+Applicable socket types:: all, when using VMCI transport
 
 
 RETURN VALUE

@@ -42,107 +42,7 @@
 #include "wire.hpp"
 #include "err.hpp"
 
-zmq::shared_message_memory_allocator::shared_message_memory_allocator(size_t bufsize_):
-    buf(NULL),
-    bufsize( 0 ),
-    max_size( bufsize_ ),
-    msg_refcnt( NULL )
-{
 
-}
-
-zmq::shared_message_memory_allocator::~shared_message_memory_allocator()
-{
-    if (buf) {
-        deallocate();
-    }
-}
-
-unsigned char* zmq::shared_message_memory_allocator::allocate()
-{
-    if (buf)
-    {
-        // release reference count to couple lifetime to messages
-        zmq::atomic_counter_t *c = reinterpret_cast<zmq::atomic_counter_t *>(buf);
-
-        // if refcnt drops to 0, there are no message using the buffer
-        // because either all messages have been closed or only vsm-messages
-        // were created
-        if (c->sub(1)) {
-            // buffer is still in use as message data. "Release" it and create a new one
-            // release pointer because we are going to create a new buffer
-            release();
-        }
-    }
-
-    // if buf != NULL it is not used by any message so we can re-use it for the next run
-    if (!buf) {
-        // allocate memory for reference counters together with reception buffer
-        size_t const maxCounters = std::ceil( (double)max_size / (double)msg_t::max_vsm_size);
-        size_t const allocationsize = max_size + sizeof(zmq::atomic_counter_t) + maxCounters * sizeof(zmq::atomic_counter_t);
-
-        buf = (unsigned char *) malloc(allocationsize);
-        alloc_assert (buf);
-
-        new(buf) atomic_counter_t(1);
-    }
-    else
-    {
-        // release reference count to couple lifetime to messages
-        zmq::atomic_counter_t *c = reinterpret_cast<zmq::atomic_counter_t *>(buf);
-        c->set(1);
-    }
-
-    bufsize = max_size;
-    msg_refcnt = reinterpret_cast<zmq::atomic_counter_t*>( buf + sizeof(atomic_counter_t) + max_size );
-    return buf + sizeof( zmq::atomic_counter_t);
-}
-
-void zmq::shared_message_memory_allocator::deallocate()
-{
-    free(buf);
-    buf = NULL;
-    bufsize = 0;
-    msg_refcnt = NULL;
-}
-
-unsigned char* zmq::shared_message_memory_allocator::release()
-{
-    unsigned char* b = buf;
-    buf = NULL;
-    bufsize = 0;
-    msg_refcnt = NULL;
-
-    return b;
-}
-
-void zmq::shared_message_memory_allocator::inc_ref()
-{
-    ((zmq::atomic_counter_t*)buf)->add(1);
-}
-
-void zmq::shared_message_memory_allocator::call_dec_ref(void*, void* hint) {
-    zmq_assert( hint );
-    unsigned char* buf = static_cast<unsigned char*>(hint);
-    zmq::atomic_counter_t *c = reinterpret_cast<zmq::atomic_counter_t *>(buf);
-
-    if (!c->sub(1)) {
-        c->~atomic_counter_t();
-        free(buf);
-        buf = NULL;
-    }
-}
-
-
-size_t zmq::shared_message_memory_allocator::size() const
-{
-    return bufsize;
-}
-
-unsigned char* zmq::shared_message_memory_allocator::data()
-{
-    return buf + sizeof(zmq::atomic_counter_t);
-}
 
 zmq::v2_decoder_t::v2_decoder_t (size_t bufsize_, int64_t maxmsgsize_) :
     shared_message_memory_allocator( bufsize_),
@@ -208,10 +108,8 @@ int zmq::v2_decoder_t::size_ready(uint64_t msg_size, unsigned char const* read_p
         return -1;
     }
 
-    //  in_progress is initialised at this point so in theory we should
-    //  close it before calling init_size, however, it's a 0-byte
-    //  message and thus we can treat it as uninitialised.
-    int rc = -1;
+    int rc = in_progress.close();
+    assert(rc == 0);
 
     // the current message can exceed the current buffer. We have to copy the buffer
     // data into a new message and complete it in the next receive.
@@ -219,7 +117,7 @@ int zmq::v2_decoder_t::size_ready(uint64_t msg_size, unsigned char const* read_p
     if (unlikely ((unsigned char*)read_pos + msg_size > (data() + size())))
     {
         // a new message has started, but the size would exceed the pre-allocated arena
-        // this happens everytime when a message does not fit completely into the buffer
+        // this happens every time when a message does not fit completely into the buffer
         rc = in_progress.init_size (static_cast <size_t> (msg_size));
     }
     else
@@ -227,13 +125,14 @@ int zmq::v2_decoder_t::size_ready(uint64_t msg_size, unsigned char const* read_p
         // construct message using n bytes from the buffer as storage
         // increase buffer ref count
         // if the message will be a large message, pass a valid refcnt memory location as well
-        rc = in_progress.init( (unsigned char*)read_pos, msg_size,
-                               shared_message_memory_allocator::call_dec_ref, buffer(),
-                               create_refcnt() );
+        rc = in_progress.init ((unsigned char *) read_pos, static_cast <size_t> (msg_size),
+                                shared_message_memory_allocator::call_dec_ref, buffer(),
+                                provide_refcnt ());
 
         // For small messages, data has been copied and refcount does not have to be increased
         if (in_progress.is_zcmsg())
         {
+            advance_refcnt();
             inc_ref();
         }
     }

@@ -66,64 +66,6 @@
     <Import Project="$(ProjectDir)..\..\properties\Output.props" />
     <Import Project="$(ProjectDir)$(ProjectName).props" />
   </ImportGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseLTCG|Win32'">
-    <Option-sodium />
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugLTCG|Win32'">
-    <Option-sodium />
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'">
-    <Option-sodium />
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseLIB|Win32'">
-    <Option-sodium />
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugLIB|Win32'">
-    <Option-sodium />
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">
-    <Option-sodium />
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseLTCG|x64'">
-    <Option-sodium />
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugLTCG|x64'">
-    <Option-sodium />
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'">
-    <Option-sodium />
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseLIB|x64'">
-    <Option-sodium />
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugLIB|x64'">
-    <Option-sodium />
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'">
-    <Option-sodium />
-  </PropertyGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseLIB|Win32'">
-    <ClCompile>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
-    </ClCompile>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseLIB|x64'">
-    <ClCompile>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
-    </ClCompile>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugLIB|Win32'">
-    <ClCompile>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-    </ClCompile>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugLIB|x64'">
-    <ClCompile>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-    </ClCompile>
-  </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\include\zmq.h" />
     <ClInclude Include="..\..\..\..\include\zmq_utils.h" />
@@ -140,6 +82,7 @@
     <ClInclude Include="..\..\..\..\src\curve_client.hpp" />
     <ClInclude Include="..\..\..\..\src\curve_server.hpp" />
     <ClInclude Include="..\..\..\..\src\decoder.hpp" />
+    <ClInclude Include="..\..\..\..\src\decoder_allocators.hpp" />
     <ClInclude Include="..\..\..\..\src\devpoll.hpp" />
     <ClInclude Include="..\..\..\..\src\dist.hpp" />
     <ClInclude Include="..\..\..\..\src\encoder.hpp" />
@@ -203,6 +146,7 @@
     <ClInclude Include="..\..\..\..\src\tcp_address.hpp" />
     <ClInclude Include="..\..\..\..\src\tcp_connecter.hpp" />
     <ClInclude Include="..\..\..\..\src\tcp_listener.hpp" />
+    <ClInclude Include="..\..\..\..\src\timers.hpp" />
     <ClInclude Include="..\..\..\..\src\thread.hpp" />
     <ClInclude Include="..\..\..\..\src\trie.hpp" />
     <ClInclude Include="..\..\..\..\src\v1_decoder.hpp" />
@@ -226,35 +170,10 @@
     <ClCompile Include="..\..\..\..\src\curve_client.cpp" />
     <ClCompile Include="..\..\..\..\src\curve_server.cpp" />
     <ClCompile Include="..\..\..\..\src\dealer.cpp" />
-    <ClCompile Include="..\..\..\..\src\devpoll.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseLTCG|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugLTCG|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseLIB|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugLIB|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseLTCG|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugLTCG|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseLIB|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugLIB|x64'">true</ExcludedFromBuild>
-    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\decoder_allocators.cpp" />
+    <ClCompile Include="..\..\..\..\src\devpoll.cpp" />
     <ClCompile Include="..\..\..\..\src\dist.cpp" />
-    <ClCompile Include="..\..\..\..\src\epoll.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseLTCG|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugLTCG|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseLIB|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugLIB|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseLTCG|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugLTCG|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseLIB|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugLIB|x64'">true</ExcludedFromBuild>
-    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\epoll.cpp" />
     <ClCompile Include="..\..\..\..\src\err.cpp" />
     <ClCompile Include="..\..\..\..\src\fq.cpp" />
     <ClCompile Include="..\..\..\..\src\gssapi_client.cpp" />
@@ -263,36 +182,10 @@
     <ClCompile Include="..\..\..\..\src\io_object.cpp" />
     <ClCompile Include="..\..\..\..\src\io_thread.cpp" />
     <ClCompile Include="..\..\..\..\src\ip.cpp" />
-    <ClCompile Include="..\..\..\..\src\ipc_address.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseLTCG|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugLTCG|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseLIB|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugLIB|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseLTCG|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugLTCG|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseLIB|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugLIB|x64'">true</ExcludedFromBuild>
-    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\ipc_address.cpp" />
     <ClCompile Include="..\..\..\..\src\ipc_connecter.cpp" />
     <ClCompile Include="..\..\..\..\src\ipc_listener.cpp" />
-    <ClCompile Include="..\..\..\..\src\kqueue.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseLTCG|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugLTCG|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseLIB|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugLIB|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseLTCG|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugLTCG|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseLIB|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugLIB|x64'">true</ExcludedFromBuild>
-    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\kqueue.cpp" />
     <ClCompile Include="..\..\..\..\src\lb.cpp" />
     <ClCompile Include="..\..\..\..\src\mailbox.cpp" />
     <ClCompile Include="..\..\..\..\src\mailbox_safe.cpp" />
@@ -311,35 +204,9 @@
     <ClCompile Include="..\..\..\..\src\pipe.cpp" />
     <ClCompile Include="..\..\..\..\src\plain_client.cpp" />
     <ClCompile Include="..\..\..\..\src\plain_server.cpp" />
-    <ClCompile Include="..\..\..\..\src\poll.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseLTCG|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugLTCG|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseLIB|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugLIB|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseLTCG|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugLTCG|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseLIB|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugLIB|x64'">true</ExcludedFromBuild>
-    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\poll.cpp" />
     <ClCompile Include="..\..\..\..\src\poller_base.cpp" />
-    <ClCompile Include="..\..\..\..\src\precompiled.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseLTCG|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugLTCG|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseLIB|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugLIB|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseLTCG|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugLTCG|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseLIB|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugLIB|x64'">true</ExcludedFromBuild>
-    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\precompiled.cpp" />
     <ClCompile Include="..\..\..\..\src\proxy.cpp" />
     <ClCompile Include="..\..\..\..\src\pub.cpp" />
     <ClCompile Include="..\..\..\..\src\pull.cpp" />
@@ -356,6 +223,7 @@
     <ClCompile Include="..\..\..\..\src\session_base.cpp" />
     <ClCompile Include="..\..\..\..\src\signaler.cpp" />
     <ClCompile Include="..\..\..\..\src\socket_base.cpp" />
+    <ClCompile Include="..\..\..\..\src\socket_poller.cpp" />
     <ClCompile Include="..\..\..\..\src\socks.cpp" />
     <ClCompile Include="..\..\..\..\src\socks_connecter.cpp" />
     <ClCompile Include="..\..\..\..\src\stream.cpp" />
@@ -366,6 +234,7 @@
     <ClCompile Include="..\..\..\..\src\tcp_connecter.cpp" />
     <ClCompile Include="..\..\..\..\src\tcp_listener.cpp" />
     <ClCompile Include="..\..\..\..\src\thread.cpp" />
+    <ClCompile Include="..\..\..\..\src\timers.cpp" />
     <ClCompile Include="..\..\..\..\src\trie.cpp" />
     <ClCompile Include="..\..\..\..\src\v1_decoder.cpp" />
     <ClCompile Include="..\..\..\..\src\v1_encoder.cpp" />

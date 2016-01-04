@@ -2,7 +2,7 @@ ACLOCAL_AMFLAGS = -I config
 
 SUBDIRS = doc
 
-DIST_SUBDIRS = builds/msvc doc
+DIST_SUBDIRS = doc builds builds/msvc
 
 pkgconfig_DATA = src/libzmq.pc
 
@@ -179,6 +179,8 @@ src_libzmq_la_SOURCES = \
 	src/tcp_listener.hpp \
 	src/thread.cpp \
 	src/thread.hpp \
+	src/timers.cpp \
+	src/timers.hpp \
 	src/tipc_address.cpp \
 	src/tipc_address.hpp \
 	src/tipc_connecter.cpp \
@@ -196,6 +198,14 @@ src_libzmq_la_SOURCES = \
 	src/v2_encoder.cpp \
 	src/v2_encoder.hpp \
 	src/v2_protocol.hpp \
+	src/vmci.cpp \
+	src/vmci.hpp \
+	src/vmci_address.cpp \
+	src/vmci_address.hpp \
+	src/vmci_connecter.cpp \
+	src/vmci_connecter.hpp \
+	src/vmci_listener.cpp \
+	src/vmci_listener.hpp \
 	src/windows.hpp \
 	src/wire.hpp \
 	src/xpub.hpp \
@@ -207,7 +217,12 @@ src_libzmq_la_SOURCES = \
 	src/ypipe_conflate.hpp \
 	src/yqueue.hpp \
 	src/zmq.cpp \
-	src/zmq_utils.cpp
+	src/zmq_utils.cpp \
+        src/decoder_allocators.hpp \
+        src/decoder_allocators.cpp \
+        src/socket_poller.hpp \
+        src/socket_poller.cpp
+
 
 if ON_MINGW
 src_libzmq_la_LDFLAGS = \
@@ -324,6 +339,8 @@ test_apps = \
 	tests/test_stream_disconnect \
 	tests/test_stream_timeout \
 	tests/test_disconnect_inproc \
+	tests/test_unbind_inproc \
+	tests/test_unbind_wildcard \
 	tests/test_ctx_options \
 	tests/test_ctx_destroy \
 	tests/test_security_null \
@@ -343,6 +360,8 @@ test_apps = \
 	tests/test_proxy \
 	tests/test_proxy_single_socket \
 	tests/test_proxy_terminate \
+	tests/test_getsockopt_memset \
+	tests/test_setsockopt \
 	tests/test_many_sockets \
 	tests/test_ipc_wildcard \
 	tests/test_diffserv \
@@ -355,11 +374,12 @@ test_apps = \
 	tests/test_xpub_welcome_msg \
 	tests/test_atomics \
 	tests/test_client_server \
-	tests/test_server_drop_more \
-	tests/test_client_drop_more \
 	tests/test_thread_safe \
 	tests/test_socketopt_hwm \
-	tests/test_heartbeats
+	tests/test_heartbeats \
+	tests/test_stream_exceeds_buffer \
+	tests/test_poller \
+	tests/test_timers
 
 tests_test_system_SOURCES = tests/test_system.cpp
 tests_test_system_LDADD = src/libzmq.la
@@ -450,6 +470,12 @@ tests_test_stream_disconnect_LDADD = src/libzmq.la
 tests_test_disconnect_inproc_SOURCES = tests/test_disconnect_inproc.cpp
 tests_test_disconnect_inproc_LDADD = src/libzmq.la
 
+tests_test_unbind_inproc_SOURCES = tests/test_unbind_inproc.cpp
+tests_test_unbind_inproc_LDADD = src/libzmq.la
+
+tests_test_unbind_wildcard_SOURCES = tests/test_unbind_wildcard.cpp
+tests_test_unbind_wildcard_LDADD = src/libzmq.la
+
 tests_test_ctx_options_SOURCES = tests/test_ctx_options.cpp
 tests_test_ctx_options_LDADD = src/libzmq.la
 
@@ -507,6 +533,9 @@ tests_test_proxy_single_socket_LDADD = src/libzmq.la
 tests_test_proxy_terminate_SOURCES = tests/test_proxy_terminate.cpp
 tests_test_proxy_terminate_LDADD = src/libzmq.la
 
+tests_test_getsockopt_memset_SOURCES = tests/test_getsockopt_memset.cpp
+tests_test_getsockopt_memset_LDADD = src/libzmq.la
+
 tests_test_many_sockets_SOURCES = tests/test_many_sockets.cpp
 tests_test_many_sockets_LDADD = src/libzmq.la
 
@@ -543,20 +572,27 @@ tests_test_atomics_LDADD = src/libzmq.la
 tests_test_client_server_SOURCES = tests/test_client_server.cpp
 tests_test_client_server_LDADD = src/libzmq.la
 
-tests_test_server_drop_more_SOURCES = tests/test_server_drop_more.cpp
-tests_test_server_drop_more_LDADD = src/libzmq.la
-
-tests_test_client_drop_more_SOURCES = tests/test_client_drop_more.cpp
-tests_test_client_drop_more_LDADD = src/libzmq.la
-
 tests_test_thread_safe_SOURCES = tests/test_thread_safe.cpp
 tests_test_thread_safe_LDADD = src/libzmq.la
 
 tests_test_socketopt_hwm_SOURCES = tests/test_sockopt_hwm.cpp
 tests_test_socketopt_hwm_LDADD = src/libzmq.la
 
+tests_test_setsockopt_SOURCES = tests/test_setsockopt.cpp
+tests_test_setsockopt_LDADD = src/libzmq.la
+
 tests_test_heartbeats_SOURCES = tests/test_heartbeats.cpp
 tests_test_heartbeats_LDADD = src/libzmq.la
+
+tests_test_stream_exceeds_buffer_SOURCES = tests/test_stream_exceeds_buffer.cpp
+tests_test_stream_exceeds_buffer_LDADD = src/libzmq.la
+
+tests_test_poller_SOURCES = tests/test_poller.cpp
+tests_test_poller_LDADD = src/libzmq.la
+
+tests_test_timers_SOURCES = tests/test_timers.cpp
+tests_test_timers_LDADD = src/libzmq.la
+
 
 if !ON_MINGW
 if !ON_CYGWIN
@@ -641,11 +677,26 @@ tests_test_abstract_ipc_LDADD = src/libzmq.la
 
 endif
 
+if HAVE_VMCI
+test_apps += test_pair_vmci test_reqrep_vmci
+
+test_pair_vmci_SOURCES = tests/test_pair_vmci.cpp
+test_pair_vmci_LDADD = libzmq.la
+test_pair_vmci_LDFLAGS = @LIBZMQ_VMCI_LDFLAGS@
+test_pair_vmci_CXXFLAGS = @LIBZMQ_VMCI_CXXFLAGS@
+
+test_reqrep_vmci_SOURCES = tests/test_reqrep_vmci.cpp
+test_reqrep_vmci_LDADD = libzmq.la
+test_reqrep_vmci_LDFLAGS = @LIBZMQ_VMCI_LDFLAGS@
+test_reqrep_vmci_CXXFLAGS = @LIBZMQ_VMCI_CXXFLAGS@
+
+endif
+
 check_PROGRAMS = ${test_apps}
 
 #  Run the test cases
 TESTS = $(test_apps)
-XFAIL_TESTS = 
+XFAIL_TESTS =
 
 if !ON_LINUX
 XFAIL_TESTS += tests/test_abstract_ipc
@@ -684,4 +735,3 @@ dist-hook:
 
 maintainer-clean-local:
 	-rm -rf $(top_srcdir)/config
-

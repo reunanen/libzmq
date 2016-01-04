@@ -27,6 +27,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "macros.hpp"
 #include "platform.hpp"
 #ifdef ZMQ_HAVE_WINDOWS
 #include "windows.hpp"
@@ -52,6 +53,10 @@
 #else
 #include "sodium.h"
 #endif
+#endif
+
+#ifdef ZMQ_HAVE_VMCI
+#include <vmci_sockets.h>
 #endif
 
 #define ZMQ_CTX_TAG_VALUE_GOOD 0xabadcafe
@@ -83,6 +88,10 @@ zmq::ctx_t::ctx_t () :
 #ifdef HAVE_FORK
     pid = getpid();
 #endif
+#ifdef ZMQ_HAVE_VMCI
+    vmci_fd = -1;
+    vmci_family = -1;
+#endif
 }
 
 bool zmq::ctx_t::check_tag ()
@@ -97,15 +106,17 @@ zmq::ctx_t::~ctx_t ()
 
     //  Ask I/O threads to terminate. If stop signal wasn't sent to I/O
     //  thread subsequent invocation of destructor would hang-up.
-    for (io_threads_t::size_type i = 0; i != io_threads.size (); i++)
+    for (io_threads_t::size_type i = 0; i != io_threads.size (); i++) {
         io_threads [i]->stop ();
+    }
 
     //  Wait till I/O threads actually terminate.
-    for (io_threads_t::size_type i = 0; i != io_threads.size (); i++)
-        delete io_threads [i];
+    for (io_threads_t::size_type i = 0; i != io_threads.size (); i++) {
+        LIBZMQ_DELETE(io_threads [i]);
+    }
 
     //  Deallocate the reaper thread object.
-    delete reaper;
+    LIBZMQ_DELETE(reaper);
 
     //  Deallocate the array of mailboxes. No special work is
     //  needed as mailboxes themselves were deallocated with their
@@ -124,15 +135,20 @@ zmq::ctx_t::~ctx_t ()
 
 int zmq::ctx_t::terminate ()
 {
-    // Connect up any pending inproc connections, otherwise we will hang
+	slot_sync.lock();
+
+	bool saveTerminating = terminating;
+	terminating = false;
+
+	// Connect up any pending inproc connections, otherwise we will hang
     pending_connections_t copy = pending_connections;
     for (pending_connections_t::iterator p = copy.begin (); p != copy.end (); ++p) {
         zmq::socket_base_t *s = create_socket (ZMQ_PAIR);
         s->bind (p->first.c_str ());
         s->close ();
     }
+	terminating = saveTerminating;
 
-    slot_sync.lock ();
     if (!starting) {
 
 #ifdef HAVE_FORK
@@ -174,6 +190,16 @@ int zmq::ctx_t::terminate ()
         zmq_assert (sockets.empty ());
     }
     slot_sync.unlock ();
+
+#ifdef ZMQ_HAVE_VMCI
+    vmci_sync.lock ();
+
+    VMCISock_ReleaseAFValueFd (vmci_fd);
+    vmci_family = -1;
+    vmci_fd = -1;
+
+    vmci_sync.unlock ();
+#endif
 
     //  Deallocate the resources.
     delete this;
@@ -569,6 +595,30 @@ void zmq::ctx_t::connect_inproc_sockets (zmq::socket_base_t *bind_socket_,
         pending_connection_.bind_pipe->flush ();
     }
 }
+
+#ifdef ZMQ_HAVE_VMCI
+
+int zmq::ctx_t::get_vmci_socket_family ()
+{
+    vmci_sync.lock ();
+
+    if (vmci_fd == -1)  {
+        vmci_family = VMCISock_GetAFValueFd (&vmci_fd);
+
+        if (vmci_fd != -1) {
+#ifdef FD_CLOEXEC
+            int rc = fcntl (vmci_fd, F_SETFD, FD_CLOEXEC);
+            errno_assert (rc != -1);
+#endif
+        }
+    }
+
+    vmci_sync.unlock ();
+
+    return vmci_family;
+}
+
+#endif
 
 //  The last used socket ID, or 0 if no socket was used so far. Note that this
 //  is a global variable. Thus, even sockets created in different contexts have

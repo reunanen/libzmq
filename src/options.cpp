@@ -41,11 +41,14 @@ zmq::options_t::options_t () :
     rate (100),
     recovery_ivl (10000),
     multicast_hops (1),
+    multicast_maxtpdu (1500),
     sndbuf (-1),
     rcvbuf (-1),
     tos (0),
     type (-1),
     linger (-1),
+    connect_timeout (0),
+    tcp_retransmit_timeout (0),
     reconnect_ivl (100),
     reconnect_ivl_max (0),
     backlog (100),
@@ -58,11 +61,13 @@ zmq::options_t::options_t () :
     invert_matching(false),
     recv_identity (false),
     raw_socket (false),
-    raw_notify (false),
+    raw_notify (true),
     tcp_keepalive (-1),
     tcp_keepalive_cnt (-1),
     tcp_keepalive_idle (-1),
     tcp_keepalive_intvl (-1),
+    tcp_recv_buffer_size (8192),
+    tcp_send_buffer_size (8192),
     mechanism (ZMQ_NULL),
     as_server (0),
     gss_plaintext (false),
@@ -74,6 +79,12 @@ zmq::options_t::options_t () :
     heartbeat_interval (0),
     heartbeat_timeout (-1)
 {
+#if defined ZMQ_HAVE_VMCI
+    vmci_buffer_size = 0;
+    vmci_buffer_min_size = 0;
+    vmci_buffer_max_size = 0;
+    vmci_connect_timeout = -1;
+#endif
 }
 
 int zmq::options_t::setsockopt (int option_, const void *optval_,
@@ -158,6 +169,20 @@ int zmq::options_t::setsockopt (int option_, const void *optval_,
             }
             break;
 
+        case ZMQ_CONNECT_TIMEOUT:
+            if (is_int && value >= 0) {
+                connect_timeout = value;
+                return 0;
+            }
+            break;
+
+        case ZMQ_TCP_RETRANSMIT_TIMEOUT:
+            if (is_int && value >= 0) {
+                tcp_retransmit_timeout = value;
+                return 0;
+            }
+            break;
+
         case ZMQ_RECONNECT_IVL:
             if (is_int && value >= -1) {
                 reconnect_ivl = value;
@@ -189,6 +214,13 @@ int zmq::options_t::setsockopt (int option_, const void *optval_,
         case ZMQ_MULTICAST_HOPS:
             if (is_int && value > 0) {
                 multicast_hops = value;
+                return 0;
+            }
+            break;
+
+        case ZMQ_MULTICAST_MAXTPDU:
+            if (is_int && value > 0) {
+                multicast_maxtpdu = value;
                 return 0;
             }
             break;
@@ -260,6 +292,20 @@ int zmq::options_t::setsockopt (int option_, const void *optval_,
         case ZMQ_TCP_KEEPALIVE_INTVL:
             if (is_int && (value == -1 || value >= 0)) {
                 tcp_keepalive_intvl = value;
+                return 0;
+            }
+            break;
+
+        case ZMQ_TCP_RECV_BUFFER:
+            if (is_int && (value > 0) ) {
+                tcp_recv_buffer_size = static_cast<unsigned int>(value);
+                return 0;
+            }
+            break;
+
+        case ZMQ_TCP_SEND_BUFFER:
+            if (is_int && (value > 0) ) {
+                tcp_send_buffer_size = static_cast<unsigned int>(value);
                 return 0;
             }
             break;
@@ -545,6 +591,36 @@ int zmq::options_t::setsockopt (int option_, const void *optval_,
             }
             break;
 
+#       ifdef ZMQ_HAVE_VMCI
+        case ZMQ_VMCI_BUFFER_SIZE:
+            if (optvallen_ == sizeof (uint64_t)) {
+                vmci_buffer_size = *((uint64_t*) optval_);
+                return 0;
+            }
+            break;
+
+        case ZMQ_VMCI_BUFFER_MIN_SIZE:
+            if (optvallen_ == sizeof (uint64_t)) {
+                vmci_buffer_min_size = *((uint64_t*) optval_);
+                return 0;
+            }
+            break;
+
+        case ZMQ_VMCI_BUFFER_MAX_SIZE:
+            if (optvallen_ == sizeof (uint64_t)) {
+                vmci_buffer_max_size = *((uint64_t*) optval_);
+                return 0;
+            }
+            break;
+
+        case ZMQ_VMCI_CONNECT_TIMEOUT:
+            if (optvallen_ == sizeof (int)) {
+                vmci_connect_timeout = *((int*) optval_);
+                return 0;
+            }
+            break;
+#       endif
+
         default:
 #if defined (ZMQ_ACT_MILITANT)
             //  There are valid scenarios for probing with unknown socket option
@@ -653,6 +729,20 @@ int zmq::options_t::getsockopt (int option_, void *optval_, size_t *optvallen_) 
             }
             break;
 
+        case ZMQ_CONNECT_TIMEOUT:
+            if (is_int) {
+                *value = connect_timeout;
+                return 0;
+            }
+            break;
+
+        case ZMQ_TCP_RETRANSMIT_TIMEOUT:
+            if (is_int) {
+                *value = tcp_retransmit_timeout;
+                return 0;
+            }
+            break;
+
         case ZMQ_RECONNECT_IVL:
             if (is_int) {
                 *value = reconnect_ivl;
@@ -685,6 +775,13 @@ int zmq::options_t::getsockopt (int option_, void *optval_, size_t *optvallen_) 
         case ZMQ_MULTICAST_HOPS:
             if (is_int) {
                 *value = multicast_hops;
+                return 0;
+            }
+            break;
+
+        case ZMQ_MULTICAST_MAXTPDU:
+            if (is_int) {
+                *value = multicast_maxtpdu;
                 return 0;
             }
             break;
@@ -756,6 +853,20 @@ int zmq::options_t::getsockopt (int option_, void *optval_, size_t *optvallen_) 
         case ZMQ_TCP_KEEPALIVE_INTVL:
             if (is_int) {
                 *value = tcp_keepalive_intvl;
+                return 0;
+            }
+            break;
+
+        case ZMQ_TCP_SEND_BUFFER:
+            if (is_int) {
+                *value = tcp_send_buffer_size;
+                return 0;
+            }
+            break;
+
+        case ZMQ_TCP_RECV_BUFFER:
+            if (is_int) {
+                *value = tcp_recv_buffer_size;
                 return 0;
             }
             break;

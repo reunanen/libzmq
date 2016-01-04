@@ -60,8 +60,6 @@ int zmq::req_t::xsend (msg_t *msg_)
             return -1;
         }
 
-        if (reply_pipe)
-            reply_pipe->terminate (false);
         receiving_reply = false;
         message_begins = true;
     }
@@ -95,7 +93,7 @@ int zmq::req_t::xsend (msg_t *msg_)
 
         message_begins = false;
 
-        // Eat all currently avaliable messages before the request is fully
+        // Eat all currently available messages before the request is fully
         // sent. This is done to avoid:
         //   REQ sends request to A, A replies, B replies too.
         //   A's reply was first and matches, that is used.

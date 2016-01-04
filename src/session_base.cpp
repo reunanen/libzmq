@@ -27,6 +27,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "macros.hpp"
 #include "session_base.hpp"
 #include "i_engine.hpp"
 #include "err.hpp"
@@ -36,6 +37,7 @@
 #include "ipc_connecter.hpp"
 #include "tipc_connecter.hpp"
 #include "socks_connecter.hpp"
+#include "vmci_connecter.hpp"
 #include "pgm_sender.hpp"
 #include "pgm_receiver.hpp"
 #include "address.hpp"
@@ -111,7 +113,7 @@ zmq::session_base_t::~session_base_t ()
     if (engine)
         engine->terminate ();
 
-    delete addr;
+    LIBZMQ_DELETE(addr);
 }
 
 void zmq::session_base_t::attach_pipe (pipe_t *pipe_)
@@ -460,7 +462,8 @@ void zmq::session_base_t::process_term (int linger_)
         //  TODO: Should this go into pipe_t::terminate ?
         //  In case there's no engine and there's only delimiter in the
         //  pipe it wouldn't be ever read. Thus we check for it explicitly.
-        pipe->check_read ();
+        if (!engine)
+            pipe->check_read ();
     }
 
     if (zap_pipe != NULL)
@@ -518,7 +521,7 @@ void zmq::session_base_t::start_connecting (bool wait_)
     if (addr->protocol == "tcp") {
         if (!options.socks_proxy_address.empty()) {
             address_t *proxy_address = new (std::nothrow)
-                address_t ("tcp", options.socks_proxy_address);
+                address_t ("tcp", options.socks_proxy_address, this->get_ctx ());
             alloc_assert (proxy_address);
             socks_connecter_t *connecter =
                 new (std::nothrow) socks_connecter_t (
@@ -627,6 +630,16 @@ void zmq::session_base_t::start_connecting (bool wait_)
         return;
     }
 #endif // ZMQ_HAVE_NORM
+
+#if defined ZMQ_HAVE_VMCI
+    if (addr->protocol == "vmci") {
+        vmci_connecter_t *connecter = new (std::nothrow) vmci_connecter_t (
+                io_thread, this, options, addr, wait_);
+        alloc_assert (connecter);
+        launch_child (connecter);
+        return;
+    }
+#endif
 
     zmq_assert (false);
 }

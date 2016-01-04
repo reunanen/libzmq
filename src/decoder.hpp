@@ -30,61 +30,18 @@
 #ifndef __ZMQ_DECODER_HPP_INCLUDED__
 #define __ZMQ_DECODER_HPP_INCLUDED__
 
-#include <stddef.h>
-#include <string.h>
-#include <stdlib.h>
 #include <algorithm>
+#include <cstddef>
+#include <cstring>
 
+#include "decoder_allocators.hpp"
 #include "err.hpp"
-#include "msg.hpp"
 #include "i_decoder.hpp"
+#include "msg.hpp"
 #include "stdint.hpp"
 
 namespace zmq
 {
-    // Static buffer policy.
-    class c_single_allocator
-    {
-    public:
-        c_single_allocator(size_t bufsize_):
-                bufsize(bufsize_),
-                buf((unsigned char*) malloc (bufsize))
-        {
-            alloc_assert (buf);
-        }
-
-        ~c_single_allocator()
-        {
-            free(buf);
-        }
-
-        unsigned char* allocate()
-        {
-            return buf;
-        }
-
-        void deallocate()
-        {
-
-        }
-
-        size_t size() const
-        {
-            return bufsize;
-        }
-
-        void resize(size_t new_size)
-        {
-            bufsize = new_size;
-        }
-    private:
-        size_t bufsize;
-        unsigned char* buf;
-
-        c_single_allocator( c_single_allocator const& );
-        c_single_allocator& operator=(c_single_allocator const&);
-    };
-
     //  Helper base class for decoders that know the amount of data to read
     //  in advance at any moment. Knowing the amount in advance is a property
     //  of the protocol used. 0MQ framing protocol is based size-prefixed
@@ -96,32 +53,32 @@ namespace zmq
     //  This class implements the state machine that parses the incoming buffer.
     //  Derived class should implement individual state machine actions.
     //
-    //  Buffer managment is done by an allocator policy.
+    //  Buffer management is done by an allocator policy.
     template <typename T, typename A = c_single_allocator>
     class decoder_base_t : public i_decoder
     {
     public:
 
-        inline decoder_base_t (A* allocator_) :
-                next (NULL),
-                read_pos (NULL),
-                to_read (0),
-                allocator( allocator_ )
+        explicit decoder_base_t (A *allocator_) :
+            next (NULL),
+            read_pos (NULL),
+            to_read (0),
+            allocator(allocator_)
         {
-            buf = allocator->allocate();
+            buf = allocator->allocate ();
         }
 
-        //  The destructor doesn't have to be virtual. It is mad virtual
+        //  The destructor doesn't have to be virtual. It is made virtual
         //  just to keep ICC and code checking tools from complaining.
-        inline virtual ~decoder_base_t ()
+        virtual ~decoder_base_t ()
         {
-            allocator->deallocate();
+            allocator->deallocate ();
         }
 
         //  Returns a buffer to be filled with binary data.
-        inline void get_buffer (unsigned char **data_, size_t *size_)
+        void get_buffer (unsigned char **data_, std::size_t *size_)
         {
-            buf = allocator->allocate();
+            buf = allocator->allocate ();
 
             //  If we are expected to read large message, we'll opt for zero-
             //  copy, i.e. we'll ask caller to fill the data directly to the
@@ -131,24 +88,24 @@ namespace zmq
             //  As a consequence, large messages being received won't block
             //  other engines running in the same I/O thread for excessive
             //  amounts of time.
-            if (to_read >= allocator->size()) {
+            if (to_read >= allocator->size ()) {
                 *data_ = read_pos;
                 *size_ = to_read;
                 return;
             }
 
             *data_ = buf;
-            *size_ = allocator->size();
+            *size_ = allocator->size ();
         }
 
         //  Processes the data in the buffer previously allocated using
-        //  get_buffer function. size_ argument specifies nemuber of bytes
+        //  get_buffer function. size_ argument specifies number of bytes
         //  actually filled into the buffer. Function returns 1 when the
         //  whole message was decoded or 0 when more data is required.
         //  On error, -1 is returned and errno set accordingly.
-        //  Number of bytes processed is returned in byts_used_.
-        inline int decode (const unsigned char *data_, size_t size_,
-                           size_t &bytes_used_)
+        //  Number of bytes processed is returned in bytes_used_.
+        int decode (const unsigned char *data_, std::size_t size_,
+                    std::size_t &bytes_used_)
         {
             bytes_used_ = 0;
 
@@ -162,7 +119,7 @@ namespace zmq
                 bytes_used_ = size_;
 
                 while (!to_read) {
-                    const int rc = (static_cast <T*> (this)->*next) (data_ + bytes_used_);
+                    const int rc = (static_cast <T *> (this)->*next) (data_ + bytes_used_);
                     if (rc != 0)
                         return rc;
                 }
@@ -171,11 +128,11 @@ namespace zmq
 
             while (bytes_used_ < size_) {
                 //  Copy the data from buffer to the message.
-                const size_t to_copy = std::min (to_read, size_ - bytes_used_);
+                const std::size_t to_copy = std::min (to_read, size_ - bytes_used_);
                 // only copy when the destination address is different from the
                 // current address in the buffer
                 if (read_pos != data_ + bytes_used_) {
-                    memcpy(read_pos, data_ + bytes_used_, to_copy);
+                    std::memcpy (read_pos, data_ + bytes_used_, to_copy);
                 }
 
                 read_pos += to_copy;
@@ -185,7 +142,7 @@ namespace zmq
                 //  If none is available, return.
                 while (to_read == 0) {
                     // pass current address in the buffer
-                    const int rc = (static_cast <T*> (this)->*next) (data_ + bytes_used_);
+                    const int rc = (static_cast <T *> (this)->*next) (data_ + bytes_used_);
                     if (rc != 0)
                         return rc;
                 }
@@ -194,22 +151,22 @@ namespace zmq
             return 0;
         }
 
-        virtual void resize_buffer(size_t new_size)
+        virtual void resize_buffer (std::size_t new_size)
         {
-            allocator->resize(new_size);
+            allocator->resize (new_size);
         }
 
     protected:
 
         //  Prototype of state machine action. Action should return false if
         //  it is unable to push the data to the system.
-        typedef int (T::*step_t) (unsigned char const*);
+        typedef int (T:: *step_t) (unsigned char const *);
 
         //  This function should be called from derived class to read data
         //  from the buffer and schedule next state machine action.
-        inline void next_step (void *read_pos_, size_t to_read_, step_t next_)
+        void next_step (void *read_pos_, std::size_t to_read_, step_t next_)
         {
-            read_pos = (unsigned char*) read_pos_;
+            read_pos = static_cast <unsigned char*> (read_pos_);
             to_read = to_read_;
             next = next_;
         }
@@ -225,16 +182,15 @@ namespace zmq
         unsigned char *read_pos;
 
         //  How much data to read before taking next step.
-        size_t to_read;
+        std::size_t to_read;
 
         //  The duffer for data to decode.
-        A* allocator;
-        unsigned char* buf;
+        A *allocator;
+        unsigned char *buf;
 
-        decoder_base_t (const decoder_base_t&);
-        const decoder_base_t &operator = (const decoder_base_t&);
+        decoder_base_t (const decoder_base_t &);
+        const decoder_base_t &operator = (const decoder_base_t &);
     };
 }
 
 #endif
-
