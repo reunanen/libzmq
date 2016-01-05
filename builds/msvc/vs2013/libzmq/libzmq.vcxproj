@@ -164,6 +164,7 @@
     <ClInclude Include="..\..\..\..\src\server.hpp" />
     <ClInclude Include="..\..\..\..\src\socks.hpp" />
     <ClInclude Include="..\..\..\..\src\socks_connecter.hpp" />
+    <ClInclude Include="..\..\..\..\src\timers.hpp" />
     <ClInclude Include="..\..\platform.hpp" />
     <ClInclude Include="..\..\..\..\src\poll.hpp" />
     <ClInclude Include="..\..\..\..\src\poller.hpp" />
@@ -190,7 +191,6 @@
     <ClInclude Include="..\..\..\..\src\tcp_address.hpp" />
     <ClInclude Include="..\..\..\..\src\tcp_connecter.hpp" />
     <ClInclude Include="..\..\..\..\src\tcp_listener.hpp" />
-    <ClInclude Include="..\..\..\..\src\timers.hpp" />
     <ClInclude Include="..\..\..\..\src\thread.hpp" />
     <ClInclude Include="..\..\..\..\src\trie.hpp" />
     <ClInclude Include="..\..\..\..\src\v1_decoder.hpp" />

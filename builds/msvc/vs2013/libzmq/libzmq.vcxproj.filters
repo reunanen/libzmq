@@ -241,7 +241,9 @@
     <ClCompile Include="..\..\..\..\src\socket_poller.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\src\timers.cpp" />
+    <ClCompile Include="..\..\..\..\src\timers.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\include\zmq_utils.h">
@@ -523,7 +525,9 @@
     <ClInclude Include="..\..\..\..\src\decoder_allocators.hpp">
       <Filter>src\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\src\timers.hpp" />
+    <ClInclude Include="..\..\..\..\src\timers.hpp">
+      <Filter>src\include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="include">
