@@ -182,7 +182,22 @@ void zmq::select_t::loop ()
 #ifdef ZMQ_HAVE_WINDOWS
         int rc = select (0, &readfds, &writefds, &exceptfds,
             timeout ? &tv : NULL);
-        wsa_assert (rc != SOCKET_ERROR);
+
+        if (rc == SOCKET_ERROR) {
+            DWORD lastError = GetLastError();
+            if (lastError == WSAENOTSOCK) {
+                // Sometimes, on Windows, we got this. So... let's try to do something.
+                // For more information, see: https://github.com/zeromq/libzmq/issues/1693
+                for (fd_set_t::size_type i = 0; i < fds.size(); i++) {
+                    if (fds[i].fd != retired_fd) {
+                        fds[i].events->in_event();
+                    }
+                }
+            }
+            else {
+                wsa_assert (rc != SOCKET_ERROR);
+            }
+        }
 #else
         int rc = select (maxfd + 1, &readfds, &writefds, &exceptfds,
             timeout ? &tv : NULL);
