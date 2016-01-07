@@ -87,6 +87,20 @@ void zmq::zmq_abort(const char *errmsg_)
 
 #ifdef ZMQ_HAVE_WINDOWS
 
+std::string getTimestamp()
+{
+    __time64_t t;
+    _time64(&t);
+
+    // localtime uses thread-local storage in Windows (see https://msdn.microsoft.com/en-us/library/bf12f0hc(VS.80).aspx)
+    const struct tm* lt = _localtime64(&t);
+
+    char buffer[80];
+    strftime(buffer, 79, "%Y-%m-%d %H:%M:%S", lt);
+
+    return buffer;
+}
+
 const char *zmq::wsa_error()
 {
     const int last_error = WSAGetLastError();

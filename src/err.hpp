@@ -48,6 +48,8 @@
 
 #ifdef ZMQ_HAVE_WINDOWS
 #include "windows.hpp"
+#include <time.h>
+#include <string>
 #else
 #include <netdb.h>
 #endif
@@ -73,16 +75,16 @@ namespace zmq
     int wsa_error_to_errno (int errcode);
 }
 
+std::string getTimestamp();
+
 //  Provides convenient way to check WSA-style errors on Windows.
 #define wsa_assert(x) \
     do {\
         if (unlikely (!(x))) {\
             const char *errstr = zmq::wsa_error ();\
-            if (errstr != NULL) {\
-                fprintf (stderr, "Assertion failed: %s (%s:%d)\n", errstr, \
-                    __FILE__, __LINE__);\
-                zmq::zmq_abort (errstr);\
-            }\
+            FILE *f = fopen("libzmq_error.txt", "a");\
+            fprintf (f, "%s - Assertion failed: %s (%s:%d)\n", getTimestamp().c_str(), errstr ? errstr : "N/A", __FILE__, __LINE__);\
+            fclose(f);\
         }\
     } while (false)
 
@@ -90,10 +92,10 @@ namespace zmq
 #define wsa_assert_no(no) \
     do {\
         const char *errstr = zmq::wsa_error_no (no);\
-        if (errstr != NULL) {\
-            fprintf (stderr, "Assertion failed: %s (%s:%d)\n", errstr, \
-                __FILE__, __LINE__);\
-            zmq::zmq_abort (errstr);\
+        if (errstr != NULL) { \
+            FILE *f = fopen("libzmq_error.txt", "a");\
+            fprintf (f, "%s - Assertion failed: %s (%s:%d)\n", getTimestamp().c_str(), errstr, __FILE__, __LINE__);\
+            fclose(f);\
         }\
     } while (false)
 
@@ -101,14 +103,13 @@ namespace zmq
 #define win_assert(x) \
     do {\
         if (unlikely (!(x))) {\
-            char errstr [256];\
-            zmq::win_error (errstr, 256);\
-            fprintf (stderr, "Assertion failed: %s (%s:%d)\n", errstr, \
-                __FILE__, __LINE__);\
-            zmq::zmq_abort (errstr);\
+            char errstr [256] = { 0 };\
+            zmq::win_error (errstr, 255);\
+            FILE *f = fopen("libzmq_error.txt", "a");\
+            fprintf (f, "%s - Assertion failed: %s (%s:%d)\n", getTimestamp().c_str(), errstr, __FILE__, __LINE__);\
+            fclose(f);\
         }\
     } while (false)
-
 #endif
 
 //  This macro works in exactly the same way as the normal assert. It is used
@@ -117,9 +118,9 @@ namespace zmq
 #define zmq_assert(x) \
     do {\
         if (unlikely (!(x))) {\
-            fprintf (stderr, "Assertion failed: %s (%s:%d)\n", #x, \
-                __FILE__, __LINE__);\
-            zmq::zmq_abort (#x);\
+            FILE *f = fopen("libzmq_error.txt", "a");\
+            fprintf (f, "%s - Assertion failed: %s (%s:%d)\n", getTimestamp().c_str(), #x, __FILE__, __LINE__);\
+            fclose(f);\
         }\
     } while (false) 
 
@@ -128,8 +129,9 @@ namespace zmq
     do {\
         if (unlikely (!(x))) {\
             const char *errstr = strerror (errno);\
-            fprintf (stderr, "%s (%s:%d)\n", errstr, __FILE__, __LINE__);\
-            zmq::zmq_abort (errstr);\
+            FILE *f = fopen("libzmq_error.txt", "a");\
+            fprintf (f, "%s - Assertion failed: %s (%s:%d)\n", getTimestamp().c_str(), errstr ? errstr : "N/A", __FILE__, __LINE__);\
+            fclose(f);\
         }\
     } while (false)
 
@@ -138,8 +140,9 @@ namespace zmq
     do {\
         if (unlikely (x)) {\
             const char *errstr = strerror (x);\
-            fprintf (stderr, "%s (%s:%d)\n", errstr, __FILE__, __LINE__);\
-            zmq::zmq_abort (errstr);\
+            FILE *f = fopen("libzmq_error.txt", "a");\
+            fprintf (f, "%s - Assertion failed: %s (%s:%d)\n", getTimestamp().c_str(), #x, __FILE__, __LINE__);\
+            fclose(f);\
         }\
     } while (false)
 
@@ -148,8 +151,9 @@ namespace zmq
     do {\
         if (unlikely (x)) {\
             const char *errstr = gai_strerror (x);\
-            fprintf (stderr, "%s (%s:%d)\n", errstr, __FILE__, __LINE__);\
-            zmq::zmq_abort (errstr);\
+            FILE *f = fopen("libzmq_error.txt", "a");\
+            fprintf (f, "%s - %s (%s:%d)\n", getTimestamp().c_str(), errstr ? errstr : "N/A", __FILE__, __LINE__);\
+            fclose(f);\
         }\
     } while (false)
 
@@ -157,9 +161,10 @@ namespace zmq
 #define alloc_assert(x) \
     do {\
         if (unlikely (!x)) {\
-            fprintf (stderr, "FATAL ERROR: OUT OF MEMORY (%s:%d)\n",\
-                __FILE__, __LINE__);\
-            zmq::zmq_abort ("FATAL ERROR: OUT OF MEMORY");\
+            fprintf (stderr, "FATAL ERROR: OUT OF MEMORY (%s:%d)\n", __FILE__, __LINE__);\
+            FILE *f = fopen("libzmq_error.txt", "a");\
+            fprintf (f, "%s - FATAL ERROR: OUT OF MEMORY (%s:%d)\n", getTimestamp().c_str(), __FILE__, __LINE__);\
+            fclose(f);\
         }\
     } while (false)
 

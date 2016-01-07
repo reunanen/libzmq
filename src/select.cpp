@@ -162,6 +162,8 @@ int zmq::select_t::max_fds ()
 
 void zmq::select_t::loop ()
 {
+    time_t prev = 0;
+
     while (!stopping) {
 
         //  Execute any due timers.
@@ -183,6 +185,15 @@ void zmq::select_t::loop ()
         int rc = select (0, &readfds, &writefds, &exceptfds,
             timeout ? &tv : NULL);
 
+        time_t now = time(NULL);
+        if (difftime(now, prev) > 0) {
+            // Write to log that we're alive
+            prev = now;
+            FILE *f = fopen("libzmq_poll_status.txt", "w");
+            fprintf(f, "%s - Select returned %d\n", getTimestamp().c_str(), rc);
+            fclose(f);
+        }
+
         if (rc == SOCKET_ERROR) {
             DWORD lastError = GetLastError();
             if (lastError == WSAENOTSOCK) {
@@ -193,6 +204,14 @@ void zmq::select_t::loop ()
                         fds[i].events->in_event();
                     }
                 }
+                std::string timestamp = getTimestamp();
+                FILE *f = fopen("libzmq_error.txt", "a");
+                fprintf(f, "%s - WSAENOTSOCK: (%s:%d)\n", timestamp.c_str(), __FILE__, __LINE__);
+                fclose(f);
+                f = fopen("libzmq_select_WSAENOTSOCK.txt", "a");
+                fprintf(f, "%s - WSAENOTSOCK: (%s:%d)\n", timestamp.c_str(), __FILE__, __LINE__);
+                fclose(f);
+                Sleep(1000);
             }
             else {
                 wsa_assert (rc != SOCKET_ERROR);
