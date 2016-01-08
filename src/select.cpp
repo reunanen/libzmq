@@ -162,8 +162,6 @@ int zmq::select_t::max_fds ()
 
 void zmq::select_t::loop ()
 {
-    time_t prev = 0;
-
     while (!stopping) {
 
         //  Execute any due timers.
@@ -174,6 +172,10 @@ void zmq::select_t::loop ()
         memcpy (&writefds, &source_set_out, sizeof source_set_out);
         memcpy (&exceptfds, &source_set_err, sizeof source_set_err);
 
+#ifdef ZMQ_HAVE_WINDOWS
+        timeout = min(timeout, 60);
+#endif
+
         //  Wait for events.
 #ifdef ZMQ_HAVE_OSX
         struct timeval tv = {(long) (timeout / 1000), timeout % 1000 * 1000};
@@ -182,13 +184,17 @@ void zmq::select_t::loop ()
             (long) (timeout % 1000 * 1000)};
 #endif
 #ifdef ZMQ_HAVE_WINDOWS
+
+        {
+            FILE *f = fopen("libzmq_poll_status.txt", "w");
+            fprintf(f, "%s - About to call select, timeout = %d\n", getTimestamp().c_str(), timeout);
+            fclose(f);
+        }
+
         int rc = select (0, &readfds, &writefds, &exceptfds,
             timeout ? &tv : NULL);
 
-        time_t now = time(NULL);
-        if (difftime(now, prev) > 0) {
-            // Write to log that we're alive
-            prev = now;
+        {
             FILE *f = fopen("libzmq_poll_status.txt", "w");
             fprintf(f, "%s - Select returned %d\n", getTimestamp().c_str(), rc);
             fclose(f);
@@ -253,6 +259,10 @@ void zmq::select_t::loop ()
             retired = false;
         }
     }
+
+    FILE *f = fopen("libzmq_poll_status.txt", "w");
+    fprintf(f, "%s - Select loop closed\n", getTimestamp().c_str());
+    fclose(f);
 }
 
 void zmq::select_t::worker_routine (void *arg_)
