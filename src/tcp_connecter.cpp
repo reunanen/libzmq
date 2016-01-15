@@ -345,7 +345,12 @@ zmq::fd_t zmq::tcp_connecter_t::connect ()
     //  Assert if the error was caused by 0MQ bug.
     //  Networking problems are OK. No need to assert.
 #ifdef ZMQ_HAVE_WINDOWS
-    zmq_assert (rc == 0);
+    wsa_assert (rc != SOCKET_ERROR);
+    if (rc != 0) {
+        // TODO: Describe here the error that we actually got
+        // (not known at the time of writing this).
+        return retired_fd;
+    }
     if (err != 0) {
         if (err == WSAEBADF ||
             err == WSAENOPROTOOPT ||
