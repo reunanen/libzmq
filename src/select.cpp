@@ -185,20 +185,24 @@ void zmq::select_t::loop ()
 #endif
 #ifdef ZMQ_HAVE_WINDOWS
 
+#if 0
         {
             FILE *f = fopen("libzmq_poll_status.txt", "w");
             fprintf(f, "%s - About to call select, timeout = %d\n", getTimestamp().c_str(), timeout);
             fclose(f);
         }
+#endif
 
         int rc = select (0, &readfds, &writefds, &exceptfds,
             timeout ? &tv : NULL);
 
+#if 0
         {
             FILE *f = fopen("libzmq_poll_status.txt", "w");
             fprintf(f, "%s - Select returned %d\n", getTimestamp().c_str(), rc);
             fclose(f);
         }
+#endif
 
         if (rc == SOCKET_ERROR) {
             DWORD lastError = GetLastError();
