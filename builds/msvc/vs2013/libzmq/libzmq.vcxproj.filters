@@ -267,16 +267,10 @@
     <ClInclude Include="..\..\..\..\src\ctx.hpp">
       <Filter>src\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\src\devpoll.hpp">
-      <Filter>src\include</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\src\dist.hpp">
       <Filter>src\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\src\encoder.hpp">
-      <Filter>src\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\src\epoll.hpp">
       <Filter>src\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\src\err.hpp">
@@ -303,16 +297,10 @@
     <ClInclude Include="..\..\..\..\src\ip.hpp">
       <Filter>src\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\src\ipc_address.hpp">
-      <Filter>src\include</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\src\ipc_connecter.hpp">
       <Filter>src\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\src\ipc_listener.hpp">
-      <Filter>src\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\src\kqueue.hpp">
       <Filter>src\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\src\lb.hpp">
@@ -453,16 +441,10 @@
     <ClInclude Include="..\..\..\..\src\proxy.hpp">
       <Filter>src\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\src\precompiled.hpp">
-      <Filter>src\include</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\src\poller_base.hpp">
       <Filter>src\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\src\poller.hpp">
-      <Filter>src\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\src\poll.hpp">
       <Filter>src\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\platform.hpp">

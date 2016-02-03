@@ -100,11 +100,9 @@
     <ClInclude Include="..\..\..\..\src\curve_server.hpp" />
     <ClInclude Include="..\..\..\..\src\decoder.hpp" />
     <ClInclude Include="..\..\..\..\src\decoder_allocators.hpp" />
-    <ClInclude Include="..\..\..\..\src\devpoll.hpp" />
     <ClInclude Include="..\..\..\..\src\dish.hpp" />
     <ClInclude Include="..\..\..\..\src\dist.hpp" />
     <ClInclude Include="..\..\..\..\src\encoder.hpp" />
-    <ClInclude Include="..\..\..\..\src\epoll.hpp" />
     <ClInclude Include="..\..\..\..\src\err.hpp" />
     <ClInclude Include="..\..\..\..\src\fd.hpp" />
     <ClInclude Include="..\..\..\..\src\fq.hpp" />
@@ -116,10 +114,8 @@
     <ClInclude Include="..\..\..\..\src\io_object.hpp" />
     <ClInclude Include="..\..\..\..\src\io_thread.hpp" />
     <ClInclude Include="..\..\..\..\src\ip.hpp" />
-    <ClInclude Include="..\..\..\..\src\ipc_address.hpp" />
     <ClInclude Include="..\..\..\..\src\ipc_connecter.hpp" />
     <ClInclude Include="..\..\..\..\src\ipc_listener.hpp" />
-    <ClInclude Include="..\..\..\..\src\kqueue.hpp" />
     <ClInclude Include="..\..\..\..\src\lb.hpp" />
     <ClInclude Include="..\..\..\..\src\likely.hpp" />
     <ClInclude Include="..\..\..\..\src\mailbox.hpp" />
@@ -138,10 +134,8 @@
     <ClInclude Include="..\..\..\..\src\server.hpp" />
     <ClInclude Include="..\..\..\..\src\socks.hpp" />
     <ClInclude Include="..\..\..\..\src\socks_connecter.hpp" />
-    <ClInclude Include="..\..\..\..\src\poll.hpp" />
     <ClInclude Include="..\..\..\..\src\poller.hpp" />
     <ClInclude Include="..\..\..\..\src\poller_base.hpp" />
-    <ClInclude Include="..\..\..\..\src\precompiled.hpp" />
     <ClInclude Include="..\..\..\..\src\proxy.hpp" />
     <ClInclude Include="..\..\..\..\src\pub.hpp" />
     <ClInclude Include="..\..\..\..\src\pull.hpp" />
