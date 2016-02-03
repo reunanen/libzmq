@@ -6,52 +6,36 @@
     <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <ItemGroup Label="ProjectConfigurations">
-    <ProjectConfiguration Include="DebugDLL|Win32">
-      <Configuration>DebugDLL</Configuration>
+    <ProjectConfiguration Include="DebugDynamicRuntime|Win32">
+      <Configuration>DebugDynamicRuntime</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="ReleaseDLL|Win32">
-      <Configuration>ReleaseDLL</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="DebugDLL|x64">
-      <Configuration>DebugDLL</Configuration>
+    <ProjectConfiguration Include="DebugDynamicRuntime|x64">
+      <Configuration>DebugDynamicRuntime</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="ReleaseDLL|x64">
-      <Configuration>ReleaseDLL</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="DebugLTCG|Win32">
-      <Configuration>DebugLTCG</Configuration>
+    <ProjectConfiguration Include="ReleaseDynamicRuntime|Win32">
+      <Configuration>ReleaseDynamicRuntime</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="ReleaseLTCG|Win32">
-      <Configuration>ReleaseLTCG</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="DebugLTCG|x64">
-      <Configuration>DebugLTCG</Configuration>
+    <ProjectConfiguration Include="ReleaseDynamicRuntime|x64">
+      <Configuration>ReleaseDynamicRuntime</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="ReleaseLTCG|x64">
-      <Configuration>ReleaseLTCG</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="DebugLIB|Win32">
-      <Configuration>DebugLIB</Configuration>
+    <ProjectConfiguration Include="DebugStaticRuntime|Win32">
+      <Configuration>DebugStaticRuntime</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="ReleaseLIB|Win32">
-      <Configuration>ReleaseLIB</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="DebugLIB|x64">
-      <Configuration>DebugLIB</Configuration>
+    <ProjectConfiguration Include="DebugStaticRuntime|x64">
+      <Configuration>DebugStaticRuntime</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="ReleaseLIB|x64">
-      <Configuration>ReleaseLIB</Configuration>
+    <ProjectConfiguration Include="ReleaseStaticRuntime|Win32">
+      <Configuration>ReleaseStaticRuntime</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseStaticRuntime|x64">
+      <Configuration>ReleaseStaticRuntime</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
@@ -66,40 +50,36 @@
     <Import Project="$(ProjectDir)..\..\properties\Output.props" />
     <Import Project="$(ProjectDir)$(ProjectName).props" />
   </ImportGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseLTCG|Win32'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseStaticRuntime|Win32'">
+    <Linkage-libsodium />
     <Option-sodium />
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugLTCG|Win32'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDynamicRuntime|Win32'">
+    <Linkage-libsodium />
     <Option-sodium />
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugStaticRuntime|Win32'">
+    <Linkage-libsodium />
     <Option-sodium />
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseLIB|Win32'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDynamicRuntime|Win32'">
+    <Linkage-libsodium />
     <Option-sodium />
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugLIB|Win32'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseStaticRuntime|x64'">
+    <Linkage-libsodium />
     <Option-sodium />
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDynamicRuntime|x64'">
+    <Linkage-libsodium />
     <Option-sodium />
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseLTCG|x64'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugStaticRuntime|x64'">
+    <Linkage-libsodium />
     <Option-sodium />
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugLTCG|x64'">
-    <Option-sodium />
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'">
-    <Option-sodium />
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseLIB|x64'">
-    <Option-sodium />
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugLIB|x64'">
-    <Option-sodium />
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDynamicRuntime|x64'">
+    <Linkage-libsodium />
     <Option-sodium />
   </PropertyGroup>
   <ItemGroup>
