@@ -51,50 +51,34 @@
     <Import Project="$(ProjectDir)$(ProjectName).props" />
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseStaticRuntime|Win32'">
-    <Linkage-libsodium />
-    <Option-sodium />
     <OutDir>$(ProjectDir)..\..\..\..\bin\$(PlatformName)\$(Configuration)\$(PlatformToolset)\</OutDir>
     <IntDir>$(ProjectDir)..\..\..\..\obj\$(TargetName)\$(PlatformName)\$(Configuration)\$(PlatformToolset)</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDynamicRuntime|Win32'">
-    <Linkage-libsodium />
-    <Option-sodium />
     <OutDir>$(ProjectDir)..\..\..\..\bin\$(PlatformName)\$(Configuration)\$(PlatformToolset)\</OutDir>
     <IntDir>$(ProjectDir)..\..\..\..\obj\$(TargetName)\$(PlatformName)\$(Configuration)\$(PlatformToolset)</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugStaticRuntime|Win32'">
-    <Linkage-libsodium />
-    <Option-sodium />
     <OutDir>$(ProjectDir)..\..\..\..\bin\$(PlatformName)\$(Configuration)\$(PlatformToolset)\</OutDir>
     <IntDir>$(ProjectDir)..\..\..\..\obj\$(TargetName)\$(PlatformName)\$(Configuration)\$(PlatformToolset)</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDynamicRuntime|Win32'">
-    <Linkage-libsodium />
-    <Option-sodium />
     <OutDir>$(ProjectDir)..\..\..\..\bin\$(PlatformName)\$(Configuration)\$(PlatformToolset)\</OutDir>
     <IntDir>$(ProjectDir)..\..\..\..\obj\$(TargetName)\$(PlatformName)\$(Configuration)\$(PlatformToolset)</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseStaticRuntime|x64'">
-    <Linkage-libsodium />
-    <Option-sodium />
     <OutDir>$(ProjectDir)..\..\..\..\bin\$(PlatformName)\$(Configuration)\$(PlatformToolset)\</OutDir>
     <IntDir>$(ProjectDir)..\..\..\..\obj\$(TargetName)\$(PlatformName)\$(Configuration)\$(PlatformToolset)</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDynamicRuntime|x64'">
-    <Linkage-libsodium />
-    <Option-sodium />
     <OutDir>$(ProjectDir)..\..\..\..\bin\$(PlatformName)\$(Configuration)\$(PlatformToolset)\</OutDir>
     <IntDir>$(ProjectDir)..\..\..\..\obj\$(TargetName)\$(PlatformName)\$(Configuration)\$(PlatformToolset)</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugStaticRuntime|x64'">
-    <Linkage-libsodium />
-    <Option-sodium />
     <OutDir>$(ProjectDir)..\..\..\..\bin\$(PlatformName)\$(Configuration)\$(PlatformToolset)\</OutDir>
     <IntDir>$(ProjectDir)..\..\..\..\obj\$(TargetName)\$(PlatformName)\$(Configuration)\$(PlatformToolset)</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDynamicRuntime|x64'">
-    <Linkage-libsodium />
-    <Option-sodium />
     <OutDir>$(ProjectDir)..\..\..\..\bin\$(PlatformName)\$(Configuration)\$(PlatformToolset)\</OutDir>
     <IntDir>$(ProjectDir)..\..\..\..\obj\$(TargetName)\$(PlatformName)\$(Configuration)\$(PlatformToolset)</IntDir>
   </PropertyGroup>
