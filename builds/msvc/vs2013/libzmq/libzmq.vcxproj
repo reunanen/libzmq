@@ -51,36 +51,36 @@
     <Import Project="$(ProjectDir)$(ProjectName).props" />
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseStaticRuntime|Win32'">
-    <OutDir>$(ProjectDir)..\..\..\..\bin\$(PlatformName)\$(Configuration)\$(PlatformToolset)\</OutDir>
-    <IntDir>$(ProjectDir)..\..\..\..\obj\$(TargetName)\$(PlatformName)\$(Configuration)\$(PlatformToolset)\</IntDir>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(OutDir)$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDynamicRuntime|Win32'">
-    <OutDir>$(ProjectDir)..\..\..\..\bin\$(PlatformName)\$(Configuration)\$(PlatformToolset)\</OutDir>
-    <IntDir>$(ProjectDir)..\..\..\..\obj\$(TargetName)\$(PlatformName)\$(Configuration)\$(PlatformToolset)\</IntDir>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(OutDir)$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugStaticRuntime|Win32'">
-    <OutDir>$(ProjectDir)..\..\..\..\bin\$(PlatformName)\$(Configuration)\$(PlatformToolset)\</OutDir>
-    <IntDir>$(ProjectDir)..\..\..\..\obj\$(TargetName)\$(PlatformName)\$(Configuration)\$(PlatformToolset)\</IntDir>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(OutDir)$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDynamicRuntime|Win32'">
-    <OutDir>$(ProjectDir)..\..\..\..\bin\$(PlatformName)\$(Configuration)\$(PlatformToolset)\</OutDir>
-    <IntDir>$(ProjectDir)..\..\..\..\obj\$(TargetName)\$(PlatformName)\$(Configuration)\$(PlatformToolset)\</IntDir>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(OutDir)$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseStaticRuntime|x64'">
-    <OutDir>$(ProjectDir)..\..\..\..\bin\$(PlatformName)\$(Configuration)\$(PlatformToolset)\</OutDir>
-    <IntDir>$(ProjectDir)..\..\..\..\obj\$(TargetName)\$(PlatformName)\$(Configuration)\$(PlatformToolset)\</IntDir>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(OutDir)$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDynamicRuntime|x64'">
-    <OutDir>$(ProjectDir)..\..\..\..\bin\$(PlatformName)\$(Configuration)\$(PlatformToolset)\</OutDir>
-    <IntDir>$(ProjectDir)..\..\..\..\obj\$(TargetName)\$(PlatformName)\$(Configuration)\$(PlatformToolset)\</IntDir>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(OutDir)$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugStaticRuntime|x64'">
-    <OutDir>$(ProjectDir)..\..\..\..\bin\$(PlatformName)\$(Configuration)\$(PlatformToolset)\</OutDir>
-    <IntDir>$(ProjectDir)..\..\..\..\obj\$(TargetName)\$(PlatformName)\$(Configuration)\$(PlatformToolset)\</IntDir>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(OutDir)$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDynamicRuntime|x64'">
-    <OutDir>$(ProjectDir)..\..\..\..\bin\$(PlatformName)\$(Configuration)\$(PlatformToolset)\</OutDir>
-    <IntDir>$(ProjectDir)..\..\..\..\obj\$(TargetName)\$(PlatformName)\$(Configuration)\$(PlatformToolset)\</IntDir>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(OutDir)$(ProjectName)\</IntDir>
   </PropertyGroup>
   <ItemGroup>
     <ClInclude Include="..\..\platform.hpp" />
