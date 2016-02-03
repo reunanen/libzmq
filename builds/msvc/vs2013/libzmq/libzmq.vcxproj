@@ -190,10 +190,8 @@
     <ClCompile Include="..\..\..\..\src\curve_server.cpp" />
     <ClCompile Include="..\..\..\..\src\dealer.cpp" />
     <ClCompile Include="..\..\..\..\src\decoder_allocators.cpp" />
-    <ClCompile Include="..\..\..\..\src\devpoll.cpp" />
     <ClCompile Include="..\..\..\..\src\dish.cpp" />
     <ClCompile Include="..\..\..\..\src\dist.cpp" />
-    <ClCompile Include="..\..\..\..\src\epoll.cpp" />
     <ClCompile Include="..\..\..\..\src\err.cpp" />
     <ClCompile Include="..\..\..\..\src\fq.cpp" />
     <ClCompile Include="..\..\..\..\src\gssapi_client.cpp" />
@@ -202,10 +200,8 @@
     <ClCompile Include="..\..\..\..\src\io_object.cpp" />
     <ClCompile Include="..\..\..\..\src\io_thread.cpp" />
     <ClCompile Include="..\..\..\..\src\ip.cpp" />
-    <ClCompile Include="..\..\..\..\src\ipc_address.cpp" />
     <ClCompile Include="..\..\..\..\src\ipc_connecter.cpp" />
     <ClCompile Include="..\..\..\..\src\ipc_listener.cpp" />
-    <ClCompile Include="..\..\..\..\src\kqueue.cpp" />
     <ClCompile Include="..\..\..\..\src\lb.cpp" />
     <ClCompile Include="..\..\..\..\src\mailbox.cpp" />
     <ClCompile Include="..\..\..\..\src\mailbox_safe.cpp" />
@@ -224,9 +220,7 @@
     <ClCompile Include="..\..\..\..\src\pipe.cpp" />
     <ClCompile Include="..\..\..\..\src\plain_client.cpp" />
     <ClCompile Include="..\..\..\..\src\plain_server.cpp" />
-    <ClCompile Include="..\..\..\..\src\poll.cpp" />
     <ClCompile Include="..\..\..\..\src\poller_base.cpp" />
-    <ClCompile Include="..\..\..\..\src\precompiled.cpp" />
     <ClCompile Include="..\..\..\..\src\proxy.cpp" />
     <ClCompile Include="..\..\..\..\src\pub.cpp" />
     <ClCompile Include="..\..\..\..\src\pull.cpp" />
