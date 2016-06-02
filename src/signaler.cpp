@@ -27,6 +27,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "precompiled.hpp"
 #include "poller.hpp"
 
 //  On AIX, poll.h has to be included before zmq.h to get consistent
@@ -37,7 +38,6 @@
 #include <poll.h>
 #elif defined ZMQ_POLL_BASED_ON_SELECT
 #if defined ZMQ_HAVE_WINDOWS
-#include "windows.hpp"
 #elif defined ZMQ_HAVE_HPUX
 #include <sys/param.h>
 #include <sys/types.h>
@@ -62,12 +62,9 @@
 #include <sys/eventfd.h>
 #endif
 
-#if defined ZMQ_HAVE_WINDOWS
-#include "windows.hpp"
-#else
+#if !defined ZMQ_HAVE_WINDOWS
 #include <unistd.h>
 #include <netinet/tcp.h>
-#include <unistd.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #endif
@@ -538,7 +535,8 @@ int zmq::signaler_t::make_fdpair (fd_t *r_, fd_t *w_)
         saved_errno = WSAGetLastError ();
 
     //  We don't need the listening socket anymore. Close it.
-    closesocket (listener);
+    rc = closesocket (listener);
+    wsa_assert(rc != SOCKET_ERROR);
 
     if (sync != NULL) {
         //  Exit the critical section.

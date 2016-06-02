@@ -30,18 +30,13 @@
 #ifndef __ZMQ_UDP_ADDRESS_HPP_INCLUDED__
 #define __ZMQ_UDP_ADDRESS_HPP_INCLUDED__
 
-#include "platform.hpp"
-
-#if defined ZMQ_HAVE_WINDOWS
-#include "windows.hpp"
-#else
+#if !defined ZMQ_HAVE_WINDOWS
 #include <sys/socket.h>
 #include <netinet/in.h>
 #endif
 
 namespace zmq
 {
-
     class udp_address_t
     {
     public:
@@ -49,7 +44,7 @@ namespace zmq
         udp_address_t ();
         virtual ~udp_address_t ();
 
-        int resolve (const char *name_);
+        int resolve (const char *name_, bool receiver_);
 
         //  The opposite to resolve()
         virtual int to_string (std::string &addr_);
@@ -71,7 +66,6 @@ namespace zmq
         const in_addr interface_ip () const;
 
     private:
-
         in_addr  multicast;
         in_addr  iface;
         sockaddr_in bind_address;

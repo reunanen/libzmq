@@ -27,10 +27,10 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "precompiled.hpp"
 #include <sys/types.h>
 
 #include "err.hpp"
-#include "platform.hpp"
 #include "socks.hpp"
 #include "tcp.hpp"
 

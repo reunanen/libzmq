@@ -90,10 +90,11 @@ int test_basic()
     return 0 ;
 }
 
-int test_xpub_proxy_unsubscribe_on_disconnect()
+int test_xpub_proxy_unsubscribe_on_disconnect(const char *frontend,
+                                              const char *backend)
 {
-    const char* frontend = "ipc://frontend";
-    const char* backend = "ipc://backend";
+    assert (frontend && backend);
+
     const char* topic = "1";
     const char* payload = "X";
 
@@ -124,7 +125,7 @@ int test_xpub_proxy_unsubscribe_on_disconnect()
     assert (zmq_setsockopt (sub1, ZMQ_SUBSCRIBE, topic, 1) == 0);
 
     // wait
-    assert (zmq_poll (0, 0, 100) == 0);
+    msleep (SETTLE_TIME);
 
     // proxy reroutes and confirms subscriptions
     char sub_buff[2];
@@ -141,7 +142,7 @@ int test_xpub_proxy_unsubscribe_on_disconnect()
     assert (zmq_setsockopt (sub2, ZMQ_SUBSCRIBE, topic, 1) == 0);
 
     // wait
-    assert (zmq_poll (0, 0, 100) == 0);
+    msleep (SETTLE_TIME);
 
     // proxy reroutes
     assert (zmq_recv (xpub_proxy, sub_buff, 2, ZMQ_DONTWAIT) == 2);
@@ -151,14 +152,14 @@ int test_xpub_proxy_unsubscribe_on_disconnect()
     assert (zmq_send (xsub_proxy, sub_buff, 2, 0) == 2);
 
     // wait
-    assert (zmq_poll (0, 0, 100) == 0);
+    msleep (SETTLE_TIME);
 
     // let publisher send a msg
     assert (zmq_send (pub, topic, 1, ZMQ_SNDMORE) == 1);
     assert (zmq_send (pub, payload, 1, 0) == 1);
 
     // wait
-    assert (zmq_poll (0, 0, 100) == 0);
+    msleep (SETTLE_TIME);
 
     // proxy reroutes data messages to subscribers
     char topic_buff[1];
@@ -171,7 +172,7 @@ int test_xpub_proxy_unsubscribe_on_disconnect()
     assert (zmq_send (xpub_proxy, data_buff, 1, 0) == 1);
 
     // wait
-    assert (zmq_poll (0, 0, 100) == 0);
+    msleep (SETTLE_TIME);
 
     // each subscriber should now get a message
     assert (zmq_recv (sub2, topic_buff, 1, ZMQ_DONTWAIT) == 1);
@@ -189,7 +190,7 @@ int test_xpub_proxy_unsubscribe_on_disconnect()
     assert (zmq_close (sub2) == 0);
 
     // wait
-    assert (zmq_poll (0, 0, 100) == 0);
+    msleep (SETTLE_TIME);
 
     // unsubscribe messages are passed from proxy to publisher
     assert (zmq_recv (xpub_proxy, sub_buff, 2, 0) == 2);
@@ -207,14 +208,14 @@ int test_xpub_proxy_unsubscribe_on_disconnect()
     assert (zmq_send (xsub_proxy, sub_buff, 2, 0) == 2);
 
     // wait
-    assert (zmq_poll (0, 0, 100) == 0);
+    msleep (SETTLE_TIME);
 
     // let publisher send a msg
     assert (zmq_send (pub, topic, 1, ZMQ_SNDMORE) == 1);
     assert (zmq_send (pub, payload, 1, 0) == 1);
 
      // wait
-    assert (zmq_poll (0, 0, 100) == 0);
+    msleep (SETTLE_TIME);
 
     // nothing should come to the proxy
     assert (zmq_recv (xsub_proxy, topic_buff, 1, ZMQ_DONTWAIT) == -1);
@@ -228,10 +229,10 @@ int test_xpub_proxy_unsubscribe_on_disconnect()
     return 0;
 }
 
-int test_missing_subscriptions()
+int test_missing_subscriptions(const char *frontend, const char *backend)
 {
-    const char* frontend = "ipc://frontend";
-    const char* backend = "ipc://backend";
+    assert (frontend && backend);
+
     const char* topic1 = "1";
     const char* topic2 = "2";
     const char* payload = "X";
@@ -273,7 +274,7 @@ int test_missing_subscriptions()
     assert (zmq_setsockopt (sub2, ZMQ_SUBSCRIBE, topic2, 1) == 0);
 
     // wait
-    assert (zmq_poll (0, 0, 100) == 0);
+    msleep (SETTLE_TIME);
 
     // proxy now reroutes and confirms subscriptions
     char buffer[2];
@@ -290,7 +291,7 @@ int test_missing_subscriptions()
     assert (zmq_send (xsub_proxy, buffer, 2, 0) == 2);
 
     // wait
-    assert (zmq_poll (0, 0, 100) == 0);
+    msleep (SETTLE_TIME);
 
     // let publisher send 2 msgs, each with its own topic
     assert (zmq_send (pub, topic1, 1, ZMQ_SNDMORE) == 1);
@@ -299,7 +300,7 @@ int test_missing_subscriptions()
     assert (zmq_send (pub, payload, 1, 0) == 1);
 
     // wait
-    assert (zmq_poll (0, 0, 100) == 0);
+    msleep (SETTLE_TIME);
 
     // proxy reroutes data messages to subscribers
     char topic_buff [1];
@@ -319,7 +320,7 @@ int test_missing_subscriptions()
     assert (zmq_send (xpub_proxy, data_buff, 1, 0) == 1);
 
     // wait
-    assert (zmq_poll (0, 0, 100) == 0);
+    msleep (SETTLE_TIME);
 
     // each subscriber should now get a message
     assert (zmq_recv (sub2, topic_buff, 1, ZMQ_DONTWAIT) == 1);
@@ -348,8 +349,20 @@ int main(void)
 {
     setup_test_environment ();
     test_basic ();
-    test_xpub_proxy_unsubscribe_on_disconnect ();
-    test_missing_subscriptions ();
+
+    const char *frontend;
+    const char *backend;
+
+#if !defined ZMQ_HAVE_WINDOWS && !defined ZMQ_HAVE_OPENVMS
+    frontend = "ipc://frontend";
+    backend = "ipc://backend";
+    test_xpub_proxy_unsubscribe_on_disconnect (frontend, backend);
+    test_missing_subscriptions (frontend, backend);
+#endif
+    frontend = "tcp://127.0.0.1:5560";
+    backend = "tcp://127.0.0.1:5561";
+    test_xpub_proxy_unsubscribe_on_disconnect (frontend, backend);
+    test_missing_subscriptions (frontend, backend);
 
     return 0;
 }

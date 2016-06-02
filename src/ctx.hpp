@@ -199,6 +199,9 @@ namespace zmq
         //  Maximum number of sockets that can be opened at the same time.
         int max_sockets;
 
+        //  Maximum allowed message size
+        int max_msgsz;
+
         //  Number of I/O threads to launch.
         int io_thread_count;
 
@@ -230,6 +233,8 @@ namespace zmq
         int vmci_family;
         mutex_t vmci_sync;
 #endif
+
+        mutex_t crypto_sync;
     };
 
 }

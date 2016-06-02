@@ -27,6 +27,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "precompiled.hpp"
 #include "sub.hpp"
 #include "msg.hpp"
 
@@ -62,8 +63,11 @@ int zmq::sub_t::xsetsockopt (int option_, const void *optval_,
     else
     if (option_ == ZMQ_UNSUBSCRIBE)
         *data = 0;
-    memcpy (data + 1, optval_, optvallen_);
-
+    //  We explicitly allow a NULL subscription with size zero
+    if (optvallen_) {
+        assert (optval_);
+        memcpy (data + 1, optval_, optvallen_);
+    }
     //  Pass it further on in the stack.
     int err = 0;
     rc = xsub_t::xsend (&msg);

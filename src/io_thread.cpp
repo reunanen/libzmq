@@ -27,11 +27,12 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "precompiled.hpp"
+
 #include <new>
 
 #include "macros.hpp"
 #include "io_thread.hpp"
-#include "platform.hpp"
 #include "err.hpp"
 #include "ctx.hpp"
 

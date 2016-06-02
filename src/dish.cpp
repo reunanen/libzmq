@@ -27,9 +27,9 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "precompiled.hpp"
 #include <string.h>
 
-#include "../include/zmq.h"
 #include "macros.hpp"
 #include "dish.hpp"
 #include "err.hpp"
@@ -319,18 +319,20 @@ int zmq::dish_session_t::pull_msg (msg_t *msg_)
     if (!msg_->is_join () && !msg_->is_leave ())
         return rc;
     else {
-        int group_length = strlen (msg_->group ());
+        int group_length = (int) strlen (msg_->group ());
 
         msg_t command;
         int offset;
 
         if (msg_->is_join ()) {
-            command.init_size (group_length + 5);
+            rc = command.init_size (group_length + 5);
+            errno_assert(rc == 0);
             offset = 5;
             memcpy (command.data (), "\4JOIN", 5);
         }
         else {
-            command.init_size (group_length + 6);
+            rc = command.init_size (group_length + 6);
+            errno_assert(rc == 0);
             offset = 6;
             memcpy (command.data (), "\5LEAVE", 6);
         }
@@ -342,7 +344,7 @@ int zmq::dish_session_t::pull_msg (msg_t *msg_)
         memcpy (command_data + offset, msg_->group (), group_length);
 
         //  Close the join message
-        int rc = msg_->close ();
+        rc = msg_->close ();
         errno_assert (rc == 0);
 
         *msg_ = command;

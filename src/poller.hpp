@@ -30,8 +30,6 @@
 #ifndef __ZMQ_POLLER_HPP_INCLUDED__
 #define __ZMQ_POLLER_HPP_INCLUDED__
 
-#include "platform.hpp"
-
 #if   defined ZMQ_USE_KQUEUE  + defined ZMQ_USE_EPOLL \
     + defined ZMQ_USE_DEVPOLL + defined ZMQ_USE_POLL  \
     + defined ZMQ_USE_SELECT > 1
@@ -39,20 +37,20 @@
 #endif
 
 #if defined ZMQ_USE_KQUEUE
-#include "kqueue.hpp"
+#   include "kqueue.hpp"
 #elif defined ZMQ_USE_EPOLL
-#include "epoll.hpp"
+#   include "epoll.hpp"
 #elif defined ZMQ_USE_DEVPOLL
-#include "devpoll.hpp"
+#   include "devpoll.hpp"
 #elif defined ZMQ_USE_POLL
-#include "poll.hpp"
+#   include "poll.hpp"
 #elif defined ZMQ_USE_SELECT
-#include "select.hpp"
+#   include "select.hpp"
 #elif defined ZMQ_HAVE_GNU
-#define ZMQ_USE_POLL
-#include "poll.hpp"
+#   define ZMQ_USE_POLL
+#   include "poll.hpp"
 #else
-#error None of the ZMQ_USE_* macros defined
+#   error None of the ZMQ_USE_* macros defined
 #endif
 
 #if defined ZMQ_USE_SELECT

@@ -13,7 +13,16 @@
     <ClCompile Include="..\..\..\..\src\dealer.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\src\devpoll.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\dgram.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\..\src\dist.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\epoll.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\src\err.cpp">
@@ -31,10 +40,16 @@
     <ClCompile Include="..\..\..\..\src\ip.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\src\ipc_address.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\..\src\ipc_connecter.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\src\ipc_listener.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\kqueue.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\src\lb.cpp">
@@ -88,6 +103,9 @@
     <ClCompile Include="..\..\..\..\src\plain_server.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\src\poll.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\..\src\poller_base.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -122,6 +140,9 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\src\router.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\scatter.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\src\select.cpp">
@@ -193,6 +214,9 @@
     <ClCompile Include="..\..\..\..\src\curve_server.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\src\gather.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\..\src\gssapi_mechanism_base.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -223,6 +247,12 @@
     <ClCompile Include="..\..\..\..\src\socket_poller.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\src\udp_address.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\udp_engine.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\..\src\dish.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -232,10 +262,7 @@
     <ClCompile Include="..\..\..\..\src\timers.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\src\udp_address.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\src\udp_engine.cpp">
+    <ClCompile Include="..\..\..\..\src\tweetnacl.c">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
@@ -255,6 +282,9 @@
     <ClInclude Include="..\..\..\..\src\atomic_ptr.hpp">
       <Filter>src\include</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\src\blob.hpp">
+      <Filter>src\include</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\..\src\clock.hpp">
       <Filter>src\include</Filter>
     </ClInclude>
@@ -267,10 +297,19 @@
     <ClInclude Include="..\..\..\..\src\ctx.hpp">
       <Filter>src\include</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\src\devpoll.hpp">
+      <Filter>src\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\dgram.hpp">
+      <Filter>src\include</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\..\src\dist.hpp">
       <Filter>src\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\src\encoder.hpp">
+      <Filter>src\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\epoll.hpp">
       <Filter>src\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\src\err.hpp">
@@ -297,10 +336,16 @@
     <ClInclude Include="..\..\..\..\src\ip.hpp">
       <Filter>src\include</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\src\ipc_address.hpp">
+      <Filter>src\include</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\..\src\ipc_connecter.hpp">
       <Filter>src\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\src\ipc_listener.hpp">
+      <Filter>src\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\kqueue.hpp">
       <Filter>src\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\src\lb.hpp">
@@ -348,6 +393,12 @@
     <ClInclude Include="..\..\..\..\src\xsub.hpp">
       <Filter>src\include</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xreq.hpp">
+      <Filter>src\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\xrep.hpp">
+      <Filter>src\include</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\..\src\xpub.hpp">
       <Filter>src\include</Filter>
     </ClInclude>
@@ -358,6 +409,9 @@
       <Filter>src\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\src\v1_encoder.hpp">
+      <Filter>src\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\v1_protocol.hpp">
       <Filter>src\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\src\v1_decoder.hpp">
@@ -399,6 +453,9 @@
     <ClInclude Include="..\..\..\..\src\session_base.hpp">
       <Filter>src\include</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\src\scatter.hpp">
+      <Filter>src\include</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\..\src\select.hpp">
       <Filter>src\include</Filter>
     </ClInclude>
@@ -432,10 +489,16 @@
     <ClInclude Include="..\..\..\..\src\proxy.hpp">
       <Filter>src\include</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\src\precompiled.hpp">
+      <Filter>src\include</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\..\src\poller_base.hpp">
       <Filter>src\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\src\poller.hpp">
+      <Filter>src\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\poll.hpp">
       <Filter>src\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\platform.hpp">
@@ -457,6 +520,9 @@
       <Filter>src\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\src\curve_server.hpp">
+      <Filter>src\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\gather.hpp">
       <Filter>src\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\src\gssapi_mechanism_base.hpp">
@@ -489,6 +555,12 @@
     <ClInclude Include="..\..\..\..\src\decoder_allocators.hpp">
       <Filter>src\include</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\src\udp_address.hpp">
+      <Filter>src\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\udp_engine.hpp">
+      <Filter>src\include</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\..\src\dish.hpp">
       <Filter>src\include</Filter>
     </ClInclude>
@@ -498,10 +570,10 @@
     <ClInclude Include="..\..\..\..\src\timers.hpp">
       <Filter>src\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\src\udp_address.hpp">
+    <ClInclude Include="..\..\..\..\src\tweetnacl.h">
       <Filter>src\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\src\udp_engine.hpp">
+    <ClInclude Include="..\..\..\..\src\zmq_draft.h">
       <Filter>src\include</Filter>
     </ClInclude>
   </ItemGroup>

@@ -27,13 +27,9 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "precompiled.hpp"
 #include <stdlib.h>
 #include <string.h>
-
-#include "platform.hpp"
-#ifdef ZMQ_HAVE_WINDOWS
-#include "windows.hpp"
-#endif
 
 #include "raw_decoder.hpp"
 #include "err.hpp"

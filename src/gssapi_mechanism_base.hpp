@@ -30,11 +30,9 @@
 #ifndef __ZMQ_GSSAPI_MECHANISM_BASE_HPP_INCLUDED__
 #define __ZMQ_GSSAPI_MECHANISM_BASE_HPP_INCLUDED__
 
-#include "platform.hpp"
-
 #ifdef HAVE_LIBGSSAPI_KRB5
 
-#if !defined(ZMQ_HAVE_FREEBSD) && !defined(ZMQ_HAVE_DRAGONFLY)
+#if HAVE_GSSAPI_GSSAPI_GENERIC_H
 #include <gssapi/gssapi_generic.h>
 #endif
 #include <gssapi/gssapi_krb5.h>

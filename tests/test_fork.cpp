@@ -35,6 +35,7 @@ const char *address = "tcp://127.0.0.1:6571";
 
 int main (void)
 {
+#if !defined (ZMQ_HAVE_WINDOWS)
     setup_test_environment ();
     void *ctx = zmq_ctx_new ();
     assert (ctx);
@@ -85,7 +86,10 @@ int main (void)
             assert (WEXITSTATUS (child_status) == 0);
             break;
         }
+        zmq_close (pull);
+        zmq_ctx_term (ctx);
         exit (0);
     }
+#endif
     return 0;
 }

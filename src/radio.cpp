@@ -27,6 +27,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "precompiled.hpp"
 #include <string.h>
 
 #include "radio.hpp"
@@ -99,9 +100,11 @@ void zmq::radio_t::xwrite_activated (pipe_t *pipe_)
 
 void zmq::radio_t::xpipe_terminated (pipe_t *pipe_)
 {
-    for (subscriptions_t::iterator it = subscriptions.begin (); it != subscriptions.end (); ++it) {
+    for (subscriptions_t::iterator it = subscriptions.begin (); it != subscriptions.end (); ) {
         if (it->second == pipe_) {
-            subscriptions.erase (it);
+            subscriptions.erase (it++);
+        } else {
+            ++it;
         }
     }
 
@@ -182,12 +185,12 @@ int zmq::radio_session_t::push_msg (msg_t *msg_)
 
         //  Set the msg type to either JOIN or LEAVE
         if (data_size >= 5 && memcmp (command_data, "\4JOIN", 5) == 0) {
-            group_length = data_size - 5;
+            group_length = (int) data_size - 5;
             group = command_data + 5;
             rc = join_leave_msg.init_join ();
         }
         else if (data_size >= 6 && memcmp (command_data, "\5LEAVE", 6) == 0) {
-            group_length = data_size - 6;
+            group_length = (int) data_size - 6;
             group = command_data + 6;
             rc = join_leave_msg.init_leave ();
         }
@@ -221,11 +224,12 @@ int zmq::radio_session_t::pull_msg (msg_t *msg_)
             return rc;
 
         const char *group = pending_msg.group ();
-        int length = strlen (group);
+        int length = (int) strlen (group);
 
         //  First frame is the group
-        msg_->init_size (length);
-        msg_->set_flags (msg_t::more);
+        rc = msg_->init_size (length);
+        errno_assert(rc == 0);
+        msg_->set_flags(msg_t::more);
         memcpy (msg_->data (), group, length);
 
         //  Next status is the body

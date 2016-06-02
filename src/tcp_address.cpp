@@ -27,32 +27,29 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "precompiled.hpp"
 #include <string>
 #include <sstream>
 
 #include "macros.hpp"
 #include "tcp_address.hpp"
-#include "platform.hpp"
 #include "stdint.hpp"
 #include "err.hpp"
 #include "ip.hpp"
 
-#ifdef ZMQ_HAVE_WINDOWS
-#include "windows.hpp"
-#else
+#ifndef ZMQ_HAVE_WINDOWS
 #include <sys/types.h>
 #include <arpa/inet.h>
 #include <netinet/tcp.h>
+#include <net/if.h>
 #include <netdb.h>
 #include <ctype.h>
+#include <unistd.h>
+#include <stdlib.h>
 #endif
 
 #ifdef ZMQ_HAVE_SOLARIS
-
 #include <sys/sockio.h>
-#include <net/if.h>
-#include <unistd.h>
-#include <stdlib.h>
 
 //  On Solaris platform, network interface name can be queried by ioctl.
 int zmq::tcp_address_t::resolve_nic_name (const char *nic_, bool ipv6_, bool is_src_)
@@ -116,11 +113,7 @@ int zmq::tcp_address_t::resolve_nic_name (const char *nic_, bool ipv6_, bool is_
 }
 
 #elif defined ZMQ_HAVE_AIX || defined ZMQ_HAVE_HPUX || defined ZMQ_HAVE_ANDROID
-
-#include <sys/types.h>
-#include <unistd.h>
 #include <sys/ioctl.h>
-#include <net/if.h>
 
 int zmq::tcp_address_t::resolve_nic_name (const char *nic_, bool ipv6_, bool is_src_)
 {
@@ -140,10 +133,10 @@ int zmq::tcp_address_t::resolve_nic_name (const char *nic_, bool ipv6_, bool is_
     struct ifreq ifr;
 
     //  Copy interface name for ioctl get.
-    strncpy (ifr.ifr_name, nic_, sizeof ifr.ifr_name);
+    strncpy (ifr.ifr_name, nic_, sizeof (ifr.ifr_name) );
 
     //  Fetch interface address.
-    const int rc = ioctl (sd, SIOCGIFADDR, (caddr_t) &ifr, sizeof ifr);
+    const int rc = ioctl (sd, SIOCGIFADDR, (caddr_t) &ifr, sizeof (ifr) );
 
     //  Clean up.
     close (sd);
@@ -182,7 +175,6 @@ int zmq::tcp_address_t::resolve_nic_name (const char *nic_, bool ipv6_, bool is_
     && defined ZMQ_HAVE_IFADDRS)
 
 #include <ifaddrs.h>
-#include <net/if.h>
 
 //  On these platforms, network interface name can be queried
 //  using getifaddrs function.
@@ -191,6 +183,14 @@ int zmq::tcp_address_t::resolve_nic_name (const char *nic_, bool ipv6_, bool is_
     //  Get the addresses.
     ifaddrs *ifa = NULL;
     const int rc = getifaddrs (&ifa);
+    if (rc != 0 && errno == EINVAL) {
+        // Windows Subsystem for Linux compatibility
+        LIBZMQ_UNUSED (nic_);
+        LIBZMQ_UNUSED (ipv6_);
+
+        errno = ENODEV;
+        return -1;
+    }
     errno_assert (rc == 0);
     zmq_assert (ifa != NULL);
 
@@ -252,23 +252,23 @@ int zmq::tcp_address_t::resolve_interface (const char *interface_, bool ipv6_, b
     //  with the address.
     if (ipv6_) {
         sockaddr_in6 ip6_addr;
-        memset (&ip6_addr, 0, sizeof ip6_addr);
+        memset (&ip6_addr, 0, sizeof (ip6_addr) );
         ip6_addr.sin6_family = AF_INET6;
-        memcpy (&ip6_addr.sin6_addr, &in6addr_any, sizeof in6addr_any);
-        out_addrlen = sizeof ip6_addr;
+        memcpy (&ip6_addr.sin6_addr, &in6addr_any, sizeof (in6addr_any) );
+        out_addrlen = sizeof (ip6_addr);
         memcpy (out_addr, &ip6_addr, out_addrlen);
     }
     else {
         sockaddr_in ip4_addr;
-        memset (&ip4_addr, 0, sizeof ip4_addr);
+        memset (&ip4_addr, 0, sizeof (ip4_addr) );
         ip4_addr.sin_family = AF_INET;
         ip4_addr.sin_addr.s_addr = htonl (INADDR_ANY);
-        out_addrlen = sizeof ip4_addr;
+        out_addrlen = sizeof (ip4_addr);
         memcpy (out_addr, &ip4_addr, out_addrlen);
     }
     //  "*" resolves to INADDR_ANY or in6addr_any.
     if (strcmp (interface_, "*") == 0) {
-        zmq_assert (out_addrlen <= sizeof address);
+        zmq_assert (out_addrlen <= sizeof (address) );
         if (is_src_)
             memcpy (&source_address, out_addr, out_addrlen);
         else
@@ -289,7 +289,7 @@ int zmq::tcp_address_t::resolve_interface (const char *interface_, bool ipv6_, b
     addrinfo *res = NULL;
     addrinfo req;
 #endif
-    memset (&req, 0, sizeof req);
+    memset (&req, 0, sizeof (req) );
 
     //  Choose IPv4 or IPv6 protocol family. Note that IPv6 allows for
     //  IPv4-in-IPv6 addresses.
@@ -322,7 +322,7 @@ int zmq::tcp_address_t::resolve_interface (const char *interface_, bool ipv6_, b
 
     //  Use the first result.
     zmq_assert (res != NULL);
-    zmq_assert ((size_t) res->ai_addrlen <= sizeof address);
+    zmq_assert ((size_t) res->ai_addrlen <= sizeof (address) );
     if (is_src_)
         memcpy (&source_address, res->ai_addr, res->ai_addrlen);
     else
@@ -342,7 +342,7 @@ int zmq::tcp_address_t::resolve_hostname (const char *hostname_, bool ipv6_, boo
 #else
     addrinfo req;
 #endif
-    memset (&req, 0, sizeof req);
+    memset (&req, 0, sizeof (req) );
 
     //  Choose IPv4 or IPv6 protocol family. Note that IPv6 allows for
     //  IPv4-in-IPv6 addresses.
@@ -383,7 +383,7 @@ int zmq::tcp_address_t::resolve_hostname (const char *hostname_, bool ipv6_, boo
     }
 
     //  Copy first result to output addr with hostname and service.
-    zmq_assert ((size_t) res->ai_addrlen <= sizeof address);
+    zmq_assert ((size_t) res->ai_addrlen <= sizeof (address) );
     if (is_src_)
         memcpy (&source_address, res->ai_addr, res->ai_addrlen);
     else
@@ -397,8 +397,8 @@ int zmq::tcp_address_t::resolve_hostname (const char *hostname_, bool ipv6_, boo
 zmq::tcp_address_t::tcp_address_t () :
     _has_src_addr (false)
 {
-    memset (&address, 0, sizeof address);
-    memset (&source_address, 0, sizeof source_address);
+    memset (&address, 0, sizeof (address) );
+    memset (&source_address, 0, sizeof (source_address) );
 }
 
 zmq::tcp_address_t::tcp_address_t (const sockaddr *sa, socklen_t sa_len) :
@@ -406,13 +406,13 @@ zmq::tcp_address_t::tcp_address_t (const sockaddr *sa, socklen_t sa_len) :
 {
     zmq_assert (sa && sa_len > 0);
 
-    memset (&address, 0, sizeof address);
-    memset (&source_address, 0, sizeof source_address);
-    if (sa->sa_family == AF_INET && sa_len >= (socklen_t) sizeof address.ipv4)
-        memcpy (&address.ipv4, sa, sizeof address.ipv4);
+    memset (&address, 0, sizeof (address) );
+    memset (&source_address, 0, sizeof (source_address) );
+    if (sa->sa_family == AF_INET && sa_len >= (socklen_t) sizeof (address.ipv4) )
+        memcpy (&address.ipv4, sa, sizeof (address.ipv4) );
     else
-    if (sa->sa_family == AF_INET6 && sa_len >= (socklen_t) sizeof address.ipv6)
-        memcpy (&address.ipv6, sa, sizeof address.ipv6);
+    if (sa->sa_family == AF_INET6 && sa_len >= (socklen_t) sizeof (address.ipv6) )
+        memcpy (&address.ipv6, sa, sizeof (address.ipv6) );
 }
 
 zmq::tcp_address_t::~tcp_address_t ()
@@ -458,13 +458,23 @@ int zmq::tcp_address_t::resolve (const char *name_, bool local_, bool ipv6_, boo
         std::string if_str = addr_str.substr(pos + 1);
         addr_str = addr_str.substr(0, pos);
         if (isalpha (if_str.at (0)))
+#if !defined ZMQ_HAVE_WINDOWS_TARGET_XP
             zone_id = if_nametoindex(if_str.c_str());
+#else
+            // The function 'if_nametoindex' is not supported on Windows XP.
+            // If we are targeting XP using a vxxx_xp toolset then fail.
+            // This is brutal as this code could be run on later windows clients
+            // meaning the IPv6 zone_id cannot have an interface name.
+            // This could be fixed with a runtime check.
+            zone_id = 0;
+#endif
         else
             zone_id = (uint32_t) atoi (if_str.c_str ());
         if (zone_id == 0) {
             errno = EINVAL;
             return -1;
         }
+
     }
 
     //  Allow 0 specifically, to detect invalid port error in atoi if not
@@ -522,7 +532,7 @@ int zmq::tcp_address_t::to_string (std::string &addr_)
     //  Not using service resolving because of
     //  https://github.com/zeromq/libzmq/commit/1824574f9b5a8ce786853320e3ea09fe1f822bc4
     char hbuf [NI_MAXHOST];
-    int rc = getnameinfo (addr (), addrlen (), hbuf, sizeof hbuf, NULL, 0, NI_NUMERICHOST);
+    int rc = getnameinfo (addr (), addrlen (), hbuf, sizeof (hbuf), NULL, 0, NI_NUMERICHOST);
     if (rc != 0) {
         addr_.clear ();
         return rc;
@@ -549,9 +559,9 @@ const sockaddr *zmq::tcp_address_t::addr () const
 socklen_t zmq::tcp_address_t::addrlen () const
 {
     if (address.generic.sa_family == AF_INET6)
-        return (socklen_t) sizeof address.ipv6;
+        return (socklen_t) sizeof (address.ipv6);
     else
-        return (socklen_t) sizeof address.ipv4;
+        return (socklen_t) sizeof (address.ipv4);
 }
 
 const sockaddr *zmq::tcp_address_t::src_addr () const
@@ -562,9 +572,9 @@ const sockaddr *zmq::tcp_address_t::src_addr () const
 socklen_t zmq::tcp_address_t::src_addrlen () const
 {
     if (address.generic.sa_family == AF_INET6)
-        return (socklen_t) sizeof source_address.ipv6;
+        return (socklen_t) sizeof (source_address.ipv6);
     else
-        return (socklen_t) sizeof source_address.ipv4;
+        return (socklen_t) sizeof (source_address.ipv4);
 }
 
 bool zmq::tcp_address_t::has_src_addr () const
@@ -654,7 +664,7 @@ int zmq::tcp_address_mask_t::to_string (std::string &addr_)
     }
 
     char hbuf [NI_MAXHOST];
-    int rc = getnameinfo (addr (), addrlen (), hbuf, sizeof hbuf, NULL, 0, NI_NUMERICHOST);
+    int rc = getnameinfo (addr (), addrlen (), hbuf, sizeof (hbuf), NULL, 0, NI_NUMERICHOST);
     if (rc != 0) {
         addr_.clear ();
         return rc;

@@ -123,9 +123,6 @@ namespace zmq
 
         int monitor (const char *endpoint_, int events_);
 
-        void set_fd(fd_t fd_);
-        fd_t fd();
-
         void event_connected (const std::string &addr_, int fd_);
         void event_connect_delayed (const std::string &addr_, int err_);
         void event_connect_retried (const std::string &addr_, int interval_);
@@ -245,7 +242,7 @@ namespace zmq
         void update_pipe_options(int option_);
 
         //  Socket's mailbox object.
-        i_mailbox* mailbox;
+        i_mailbox *mailbox;
 
         //  List of attached pipes.
         typedef array_t <pipe_t, 3> pipes_t;
@@ -263,9 +260,6 @@ namespace zmq
 
         //  True if the last message received had MORE flag set.
         bool rcvmore;
-
-        // File descriptor if applicable
-        fd_t file_desc;
 
         //  Improves efficiency of time measurement.
         clock_t clock;
