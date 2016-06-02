@@ -58,6 +58,7 @@ extern "C" {
 #include <stddef.h>
 #include <stdio.h>
 #if defined _WIN32
+
 // For the time being, support Windows XP (0x0501).
 // Increase to 0x0600, when WinXP support is no longer necessary.
 #ifndef _WIN32_WINNT

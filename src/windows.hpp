@@ -37,10 +37,8 @@
 #define NOMINMAX          // Macros min(a,b) and max(a,b)
 #endif
 
-// For the time being, support Windows XP (0x0501).
-// Increase to 0x0600, when WinXP support is no longer necessary.
 #ifndef _WIN32_WINNT
-#define _WIN32_WINNT 0x0501
+#error Please specify _WIN32_WINNT explicitly. Recommended values: 0x0501 (Windows XP) for 32-bit builds, 0x0600 for 64-bit builds.
 #endif
 
 #ifdef __MINGW32__
