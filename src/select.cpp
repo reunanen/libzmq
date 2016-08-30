@@ -94,7 +94,6 @@ void zmq::select_t::rm_fd (handle_t handle_)
 {
 #if defined ZMQ_HAVE_WINDOWS
     u_short family = get_fd_family (handle_);
-    wsa_assert (family != AF_UNSPEC);
 
     family_entries_t::iterator family_entry_it = family_entries.find (family);
     family_entry_t& family_entry = family_entry_it->second;
