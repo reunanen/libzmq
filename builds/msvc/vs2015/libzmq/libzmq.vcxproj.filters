@@ -208,9 +208,6 @@
     <ClCompile Include="..\..\..\..\src\zmq_utils.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\src\precompiled.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\src\curve_client.cpp">
       <Filter>src</Filter>
     </ClCompile>
