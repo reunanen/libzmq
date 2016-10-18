@@ -318,7 +318,7 @@ void zmq::select_t::loop ()
                     --rc;
                 }
 
-                if (fd_entry.fd == retired_fd || rc == 0)
+                if (rc == 0 || fd_entry.fd == retired_fd)
                     continue;
 
                 if (FD_ISSET (fd_entry.fd, &local_fds_set.write)) {
