@@ -100,7 +100,7 @@ int zmq::ipc_listener_t::create_wildcard_address(std::string& path_,
 
     // We need room for tmp_path + trailing NUL
     std::vector<char> buffer(tmp_path.length()+1);
-    strcpy(buffer.data(), tmp_path.c_str());
+    strcpy (&buffer[0], tmp_path.c_str ());
 
 #ifdef HAVE_MKDTEMP
     // Create the directory.  POSIX requires that mkdtemp() creates the
@@ -109,22 +109,22 @@ int zmq::ipc_listener_t::create_wildcard_address(std::string& path_,
     // each socket is created in a directory created by mkdtemp(), and
     // mkdtemp() guarantees a unique directory name, there will be no
     // collision.
-    if ( mkdtemp(buffer.data()) == 0 ) {
+    if (mkdtemp (&buffer[0]) == 0) {
         return -1;
     }
 
-    path_.assign(buffer.data());
+    path_.assign (&buffer[0]);
     file_.assign (path_ + "/socket");
 #else
     // Silence -Wunused-parameter. #pragma and __attribute__((unused)) are not
     // very portable unfortunately...
     (void) path_;
-    int fd = mkstemp (buffer.data());
+    int fd = mkstemp (&buffer[0]);
     if (fd == -1)
          return -1;
     ::close (fd);
 
-    file_.assign (buffer.data());
+    file_.assign (&buffer[0]);
 #endif
 
     return 0;
@@ -390,7 +390,11 @@ zmq::fd_t zmq::ipc_listener_t::accept ()
     //  The situation where connection cannot be accepted due to insufficient
     //  resources is considered valid and treated by ignoring the connection.
     zmq_assert (s != retired_fd);
+#if defined ZMQ_HAVE_SOCK_CLOEXEC
+    fd_t sock = ::accept4 (s, NULL, NULL, SOCK_CLOEXEC);
+#else
     fd_t sock = ::accept (s, NULL, NULL);
+#endif
     if (sock == -1) {
         errno_assert (errno == EAGAIN || errno == EWOULDBLOCK ||
             errno == EINTR || errno == ECONNABORTED || errno == EPROTO ||
@@ -398,9 +402,9 @@ zmq::fd_t zmq::ipc_listener_t::accept ()
         return retired_fd;
     }
 
+#if !defined ZMQ_HAVE_SOCK_CLOEXEC && defined FD_CLOEXEC
     //  Race condition can cause socket not to be closed (if fork happens
     //  between accept and this point).
-#ifdef FD_CLOEXEC
     int rc = fcntl (sock, F_SETFD, FD_CLOEXEC);
     errno_assert (rc != -1);
 #endif

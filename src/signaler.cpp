@@ -35,7 +35,9 @@
 //  instead of 'events' and 'revents' and defines macros to map from POSIX-y
 //  names to AIX-specific names).
 #if defined ZMQ_POLL_BASED_ON_POLL
+#if !defined ZMQ_HAVE_WINDOWS
 #include <poll.h>
+#endif
 #elif defined ZMQ_POLL_BASED_ON_SELECT
 #if defined ZMQ_HAVE_WINDOWS
 #elif defined ZMQ_HAVE_HPUX
@@ -336,11 +338,11 @@ int zmq::signaler_t::recv_failable ()
 #if defined ZMQ_HAVE_WINDOWS
     int nbytes = ::recv (r, (char *) &dummy, sizeof (dummy), 0);
     if (nbytes == SOCKET_ERROR) {
-		const int last_error = WSAGetLastError();
-		if (last_error == WSAEWOULDBLOCK) {
-			errno = EAGAIN;
+        const int last_error = WSAGetLastError();
+        if (last_error == WSAEWOULDBLOCK) {
+            errno = EAGAIN;
             return -1;
-		}
+        }
         wsa_assert (last_error == WSAEWOULDBLOCK);
     }
 #else
@@ -386,7 +388,7 @@ int zmq::signaler_t::make_fdpair (fd_t *r_, fd_t *w_)
 
 #elif defined ZMQ_HAVE_WINDOWS
 #   if !defined _WIN32_WCE
-    // Windows CE does not manage security attributes
+    //  Windows CE does not manage security attributes
     SECURITY_DESCRIPTOR sd;
     SECURITY_ATTRIBUTES sa;
     memset (&sd, 0, sizeof sd);

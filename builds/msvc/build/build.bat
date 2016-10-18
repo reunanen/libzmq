@@ -31,5 +31,3 @@ set STOPTIME=%DATE% %TIME%
 
 :done
 @endlocal
-
-PAUSE

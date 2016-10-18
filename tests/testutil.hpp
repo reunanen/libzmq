@@ -51,10 +51,14 @@
 #include <string.h>
 
 #if defined _WIN32
-#   include "windows.hpp"
+#   include "../src/windows.hpp"
 #   if defined _MSC_VER
 #       include <crtdbg.h>
 #       pragma warning(disable:4996)
+// iphlpapi is needed for if_nametoindex (not on Windows XP)
+#       if !defined ZMQ_HAVE_WINDOWS_TARGET_XP
+#           pragma comment(lib,"iphlpapi")
+#       endif
 #   endif
 #else
 #   include <pthread.h>
@@ -327,6 +331,9 @@ msleep (int milliseconds)
 int
 is_ipv6_available(void)
 {
+#if defined (ZMQ_HAVE_WINDOWS) && (_WIN32_WINNT < 0x0600)
+    return 0;
+#else
     int rc, ipv6 = 1;
     struct sockaddr_in6 test_addr;
 
@@ -369,6 +376,7 @@ is_ipv6_available(void)
 #endif
 
     return ipv6;
+#endif // _WIN32_WINNT < 0x0600
 }
 
 #endif

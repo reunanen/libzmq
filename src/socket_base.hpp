@@ -123,16 +123,16 @@ namespace zmq
 
         int monitor (const char *endpoint_, int events_);
 
-        void event_connected (const std::string &addr_, int fd_);
+        void event_connected (const std::string &addr_, zmq::fd_t fd_);
         void event_connect_delayed (const std::string &addr_, int err_);
         void event_connect_retried (const std::string &addr_, int interval_);
-        void event_listening (const std::string &addr_, int fd_);
+        void event_listening (const std::string &addr_, zmq::fd_t fd_);
         void event_bind_failed (const std::string &addr_, int err_);
-        void event_accepted (const std::string &addr_, int fd_);
+        void event_accepted (const std::string &addr_, zmq::fd_t fd_);
         void event_accept_failed (const std::string &addr_, int err_);
-        void event_closed (const std::string &addr_, int fd_);
-        void event_close_failed (const std::string &addr_, int fd_);
-        void event_disconnected (const std::string &addr_, int fd_);
+        void event_closed (const std::string &addr_, zmq::fd_t fd_);
+        void event_close_failed (const std::string &addr_, int err_);
+        void event_disconnected (const std::string &addr_, zmq::fd_t fd_);
 
     protected:
 
@@ -176,16 +176,20 @@ namespace zmq
         //  Delay actual destruction of the socket.
         void process_destroy ();
 
-        // Socket event data dispatch
-        void monitor_event (int event_, int value_, const std::string& addr_);
-
-        // Monitor socket cleanup
-        void stop_monitor (bool send_monitor_stopped_event_ = true);
 
         // Next assigned name on a zmq_connect() call used by ROUTER and STREAM socket types
         std::string connect_rid;
 
     private:
+        // test if event should be sent and then dispatch it        
+        void event(const std::string &addr_, intptr_t fd_, int type_);
+
+        // Socket event data dispatch
+        void monitor_event (int event_, intptr_t value_, const std::string& addr_);
+
+        // Monitor socket cleanup
+        void stop_monitor (bool send_monitor_stopped_event_ = true);
+
         //  Creates new endpoint ID and adds the endpoint to the map.
         void add_endpoint (const char *addr_, own_t *endpoint_, pipe_t *pipe);
 
@@ -281,6 +285,9 @@ namespace zmq
 
         // Mutex for synchronize access to the socket in thread safe mode
         mutex_t sync;
+
+        // Mutex to synchronize access to the monitor Pair socket
+        mutex_t monitor_sync;
 
         socket_base_t (const socket_base_t&);
         const socket_base_t &operator = (const socket_base_t&);
