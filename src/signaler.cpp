@@ -510,6 +510,7 @@ int zmq::signaler_t::make_fdpair (fd_t *r_, fd_t *w_)
     if (rc != SOCKET_ERROR)
         *r_ = accept (listener, NULL, NULL);
 
+#if 0
     //  Send/receive large chunk to work around TCP slow start
     //  This code is a workaround for #1608
     if (*r_ != INVALID_SOCKET) {
@@ -530,6 +531,7 @@ int zmq::signaler_t::make_fdpair (fd_t *r_, fd_t *w_)
         }
         free (dummy);
     }
+#endif
 
     //  Save errno if error occurred in bind/listen/connect/accept.
     int saved_errno = 0;
