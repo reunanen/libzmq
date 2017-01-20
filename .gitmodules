@@ -1,0 +1,3 @@
+[submodule "src/stackwalker"]
+	path = src/stackwalker
+	url = https://github.com/reunanen/stackwalker

@@ -30,6 +30,30 @@
 #include "precompiled.hpp"
 #include "err.hpp"
 
+#if defined ZMQ_HAVE_WINDOWS
+#include "stackwalker/StackWalker.h"
+#include <fstream>
+
+class StackWalkerToStream : public StackWalker
+{
+public:
+    StackWalkerToStream(std::ostream& out)
+        : out(out) {
+    }
+
+protected:
+    virtual void OnOutput(LPCSTR szText)
+    {
+        out << szText;
+        StackWalker::OnOutput(szText);
+    }
+
+private:
+    std::ostream& out;
+};
+
+#endif
+
 const char *zmq::errno_to_string (int errno_)
 {
     switch (errno_) {
@@ -74,6 +98,14 @@ const char *zmq::errno_to_string (int errno_)
 void zmq::zmq_abort(const char *errmsg_)
 {
 #if defined ZMQ_HAVE_WINDOWS
+    {
+        std::ofstream out("zmq_abort.txt");
+
+        out << errmsg_ << std::endl << std::endl;
+
+        StackWalkerToStream sw(out);
+        sw.ShowCallstack();
+    }
 
     //  Raise STATUS_FATAL_APP_EXIT.
     ULONG_PTR extra_info [1];
