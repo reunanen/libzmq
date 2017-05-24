@@ -237,12 +237,9 @@
     <ClInclude Include="..\..\..\..\src\udp_engine.hpp" />
     <ClInclude Include="..\..\..\..\src\v1_decoder.hpp" />
     <ClInclude Include="..\..\..\..\src\v1_encoder.hpp" />
-    <ClInclude Include="..\..\..\..\src\v1_protocol.hpp" />
     <ClInclude Include="..\..\..\..\src\windows.hpp" />
     <ClInclude Include="..\..\..\..\src\wire.hpp" />
     <ClInclude Include="..\..\..\..\src\xpub.hpp" />
-    <ClInclude Include="..\..\..\..\src\xrep.hpp" />
-    <ClInclude Include="..\..\..\..\src\xreq.hpp" />
     <ClInclude Include="..\..\..\..\src\xsub.hpp" />
     <ClInclude Include="..\..\..\..\src\ypipe.hpp" />
     <ClInclude Include="..\..\..\..\src\yqueue.hpp" />

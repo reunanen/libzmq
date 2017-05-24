@@ -393,12 +393,6 @@
     <ClInclude Include="..\..\..\..\src\xsub.hpp">
       <Filter>src\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\src\xreq.hpp">
-      <Filter>src\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\src\xrep.hpp">
-      <Filter>src\include</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\src\xpub.hpp">
       <Filter>src\include</Filter>
     </ClInclude>
@@ -409,9 +403,6 @@
       <Filter>src\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\src\v1_encoder.hpp">
-      <Filter>src\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\src\v1_protocol.hpp">
       <Filter>src\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\src\v1_decoder.hpp">
