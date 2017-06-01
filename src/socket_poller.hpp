@@ -75,7 +75,7 @@ namespace zmq
 
         int wait (event_t *event, int n_events, long timeout);
 
-        inline int size (void) { return items.size (); };
+        inline size_t size (void) const { return items.size (); };
 
         //  Return false if object is not a socket.
         bool check_tag ();
