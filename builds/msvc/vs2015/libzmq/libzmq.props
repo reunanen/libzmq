@@ -41,7 +41,7 @@
   <!-- Dependencies -->
 
   <ImportGroup Label="PropertySheets">
-    <Import Project="$(SolutionDir)libsodium.import.props" />
+    <Import Project="$(ProjectDir)..\libsodium.import.props" />
   </ImportGroup>
   
   <PropertyGroup Condition="'$(DefaultLinkage)' == 'dynamic'">
