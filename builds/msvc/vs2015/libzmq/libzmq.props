@@ -35,28 +35,4 @@
     </Lib>
   </ItemDefinitionGroup>
 
-  <!-- Dependencies -->
-
-  <ImportGroup Label="PropertySheets">
-    <Import Project="$(ProjectDir)..\libsodium.import.props" />
-  </ImportGroup>
-  
-  <PropertyGroup Condition="'$(DefaultLinkage)' == 'dynamic'">
-    <Linkage-libsodium>dynamic</Linkage-libsodium>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(DefaultLinkage)' == 'ltcg'">
-    <Linkage-libsodium>ltcg</Linkage-libsodium>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(DefaultLinkage)' == 'static'">
-    <Linkage-libsodium>static</Linkage-libsodium>
-  </PropertyGroup>
-
-  <!-- Messages -->
-
-  <Target Name="OptionInfo" BeforeTargets="PrepareForBuild">
-    <Message Text="Option-openpgm    : $(Option-openpgm)" Importance="high"/>
-    <Message Text="Option-gssapi     : $(Option-gssapi)" Importance="high"/>
-    <Message Text="Option-usepoll    : $(Option-usepoll)" Importance="high"/>
-  </Target>
-
 </Project>
