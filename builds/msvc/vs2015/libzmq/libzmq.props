@@ -6,16 +6,12 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
-  
-    <!-- User Interface -->
-  
+
+  <!-- User Interface -->
+
   <ItemGroup Label="BuildOptionsExtension">
     <PropertyPageSchema Include="$(MSBuildThisFileDirectory)$(ProjectName).xml" />
   </ItemGroup>
-
-  <PropertyGroup>
-    <Option-sodium>true</Option-sodium>
-  </PropertyGroup>
 
   <!-- Configuration -->
   
@@ -23,10 +19,11 @@
     <ClCompile>
       <AdditionalIncludeDirectories>$(ProjectDir)..\..\;$(ProjectDir)..\..\..\..\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <EnablePREfast>false</EnablePREfast>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;FD_SETSIZE=4096;ZMQ_USE_SELECT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS;FD_SETSIZE=16384;ZMQ_USE_SELECT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(Option-openpgm)' == 'true'">ZMQ_HAVE_OPENPGM;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <PreprocessorDefinitions Condition="'$(Option-sodium)' == 'true'">HAVE_LIBSODIUM;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(Option-gssapi)' == 'true'">HAVE_LIBGSSAPI_KRB5;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="'$(Option-usepoll)' == 'true'">ZMQ_USE_POLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="'$(Option-usepoll)' != 'true'">ZMQ_USE_SELECT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(ConfigurationType)' == 'StaticLibrary'">ZMQ_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(ConfigurationType)' == 'DynamicLibrary'">DLL_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
@@ -58,12 +55,8 @@
 
   <Target Name="OptionInfo" BeforeTargets="PrepareForBuild">
     <Message Text="Option-openpgm    : $(Option-openpgm)" Importance="high"/>
-    <Message Text="Option-sodium     : $(Option-sodium)" Importance="high"/>
     <Message Text="Option-gssapi     : $(Option-gssapi)" Importance="high"/>
-  </Target>
-
-  <Target Name="LinkageInfo" BeforeTargets="PrepareForBuild">
-    <Message Text="Linkage-libsodium : $(Linkage-libsodium)" Importance="high"/>
+    <Message Text="Option-usepoll    : $(Option-usepoll)" Importance="high"/>
   </Target>
 
 </Project>

@@ -1,57 +1,41 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Label="Globals">
     <ProjectGuid>{641C5F36-32EE-4323-B740-992B651CF9D6}</ProjectGuid>
     <ProjectName>libzmq</ProjectName>
     <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
   <ItemGroup Label="ProjectConfigurations">
-    <ProjectConfiguration Include="DebugDLL|Win32">
-      <Configuration>DebugDLL</Configuration>
+    <ProjectConfiguration Include="DebugDynamicRuntime|Win32">
+      <Configuration>DebugDynamicRuntime</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="ReleaseDLL|Win32">
-      <Configuration>ReleaseDLL</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="DebugDLL|x64">
-      <Configuration>DebugDLL</Configuration>
+    <ProjectConfiguration Include="DebugDynamicRuntime|x64">
+      <Configuration>DebugDynamicRuntime</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="ReleaseDLL|x64">
-      <Configuration>ReleaseDLL</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="DebugLTCG|Win32">
-      <Configuration>DebugLTCG</Configuration>
+    <ProjectConfiguration Include="ReleaseDynamicRuntime|Win32">
+      <Configuration>ReleaseDynamicRuntime</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="ReleaseLTCG|Win32">
-      <Configuration>ReleaseLTCG</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="DebugLTCG|x64">
-      <Configuration>DebugLTCG</Configuration>
+    <ProjectConfiguration Include="ReleaseDynamicRuntime|x64">
+      <Configuration>ReleaseDynamicRuntime</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="ReleaseLTCG|x64">
-      <Configuration>ReleaseLTCG</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="DebugLIB|Win32">
-      <Configuration>DebugLIB</Configuration>
+    <ProjectConfiguration Include="DebugStaticRuntime|Win32">
+      <Configuration>DebugStaticRuntime</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="ReleaseLIB|Win32">
-      <Configuration>ReleaseLIB</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="DebugLIB|x64">
-      <Configuration>DebugLIB</Configuration>
+    <ProjectConfiguration Include="DebugStaticRuntime|x64">
+      <Configuration>DebugStaticRuntime</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="ReleaseLIB|x64">
-      <Configuration>ReleaseLIB</Configuration>
+    <ProjectConfiguration Include="ReleaseStaticRuntime|Win32">
+      <Configuration>ReleaseStaticRuntime</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseStaticRuntime|x64">
+      <Configuration>ReleaseStaticRuntime</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
@@ -66,13 +50,108 @@
     <Import Project="$(ProjectDir)..\..\properties\Output.props" />
     <Import Project="$(ProjectDir)$(ProjectName).props" />
   </ImportGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseStaticRuntime|Win32'">
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(OutDir)$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDynamicRuntime|Win32'">
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(OutDir)$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugStaticRuntime|Win32'">
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(OutDir)$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDynamicRuntime|Win32'">
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(OutDir)$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseStaticRuntime|x64'">
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(OutDir)$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDynamicRuntime|x64'">
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(OutDir)$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugStaticRuntime|x64'">
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(OutDir)$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDynamicRuntime|x64'">
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(OutDir)$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugStaticRuntime|Win32'">
+    <ClCompile>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <PreprocessorDefinitions>_WIN32_WINNT=0x0501;ZMQ_HAVE_WINDOWS_TARGET_XP;ZMQ_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\..\;$(ProjectDir)..\..\..\..\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugDynamicRuntime|Win32'">
+    <ClCompile>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <PreprocessorDefinitions>_WIN32_WINNT=0x0501;ZMQ_HAVE_WINDOWS_TARGET_XP;ZMQ_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\..\;$(ProjectDir)..\..\..\..\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugStaticRuntime|x64'">
+    <ClCompile>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <PreprocessorDefinitions>_WIN32_WINNT=0x0600;ZMQ_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\..\;$(ProjectDir)..\..\..\..\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugDynamicRuntime|x64'">
+    <ClCompile>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <PreprocessorDefinitions>_WIN32_WINNT=0x0600;ZMQ_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\..\;$(ProjectDir)..\..\..\..\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseStaticRuntime|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>_WIN32_WINNT=0x0501;ZMQ_HAVE_WINDOWS_TARGET_XP;ZMQ_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\..\;$(ProjectDir)..\..\..\..\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDynamicRuntime|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>_WIN32_WINNT=0x0501;ZMQ_HAVE_WINDOWS_TARGET_XP;ZMQ_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\..\;$(ProjectDir)..\..\..\..\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseStaticRuntime|x64'">
+    <ClCompile />
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseStaticRuntime|x64'">
+    <ClCompile />
+    <ClCompile>
+      <PreprocessorDefinitions>_WIN32_WINNT=0x0600;ZMQ_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\..\;$(ProjectDir)..\..\..\..\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDynamicRuntime|x64'">
+    <ClCompile />
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDynamicRuntime|x64'">
+    <ClCompile />
+    <ClCompile>
+      <PreprocessorDefinitions>_WIN32_WINNT=0x0600;ZMQ_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\..\;$(ProjectDir)..\..\..\..\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\platform.hpp" />
+    <ClInclude Include="..\..\resource.h" />
     <ClInclude Include="..\..\..\..\include\zmq.h" />
-    <ClInclude Include="..\..\..\..\include\zmq_utils.h" />
+    <ClInclude Include="..\..\..\..\src\zmq_draft.h" />
     <ClInclude Include="..\..\..\..\src\address.hpp" />
     <ClInclude Include="..\..\..\..\src\array.hpp" />
     <ClInclude Include="..\..\..\..\src\atomic_counter.hpp" />
     <ClInclude Include="..\..\..\..\src\atomic_ptr.hpp" />
+    <ClInclude Include="..\..\..\..\src\blob.hpp" />
     <ClInclude Include="..\..\..\..\src\client.hpp" />
     <ClInclude Include="..\..\..\..\src\clock.hpp" />
     <ClInclude Include="..\..\..\..\src\command.hpp" />
@@ -84,12 +163,15 @@
     <ClInclude Include="..\..\..\..\src\decoder.hpp" />
     <ClInclude Include="..\..\..\..\src\decoder_allocators.hpp" />
     <ClInclude Include="..\..\..\..\src\devpoll.hpp" />
+    <ClInclude Include="..\..\..\..\src\dgram.hpp" />
+    <ClInclude Include="..\..\..\..\src\dish.hpp" />
     <ClInclude Include="..\..\..\..\src\dist.hpp" />
     <ClInclude Include="..\..\..\..\src\encoder.hpp" />
     <ClInclude Include="..\..\..\..\src\epoll.hpp" />
     <ClInclude Include="..\..\..\..\src\err.hpp" />
     <ClInclude Include="..\..\..\..\src\fd.hpp" />
     <ClInclude Include="..\..\..\..\src\fq.hpp" />
+    <ClInclude Include="..\..\..\..\src\gather.hpp" />
     <ClInclude Include="..\..\..\..\src\gssapi_client.hpp" />
     <ClInclude Include="..\..\..\..\src\gssapi_mechanism_base.hpp" />
     <ClInclude Include="..\..\..\..\src\gssapi_server.hpp" />
@@ -120,7 +202,6 @@
     <ClInclude Include="..\..\..\..\src\server.hpp" />
     <ClInclude Include="..\..\..\..\src\socks.hpp" />
     <ClInclude Include="..\..\..\..\src\socks_connecter.hpp" />
-    <ClInclude Include="..\..\platform.hpp" />
     <ClInclude Include="..\..\..\..\src\poll.hpp" />
     <ClInclude Include="..\..\..\..\src\poller.hpp" />
     <ClInclude Include="..\..\..\..\src\poller_base.hpp" />
@@ -129,12 +210,14 @@
     <ClInclude Include="..\..\..\..\src\pub.hpp" />
     <ClInclude Include="..\..\..\..\src\pull.hpp" />
     <ClInclude Include="..\..\..\..\src\push.hpp" />
+    <ClInclude Include="..\..\..\..\src\radio.hpp" />
     <ClInclude Include="..\..\..\..\src\random.hpp" />
     <ClInclude Include="..\..\..\..\src\raw_decoder.hpp" />
     <ClInclude Include="..\..\..\..\src\raw_encoder.hpp" />
     <ClInclude Include="..\..\..\..\src\reaper.hpp" />
     <ClInclude Include="..\..\..\..\src\rep.hpp" />
     <ClInclude Include="..\..\..\..\src\req.hpp" />
+    <ClInclude Include="..\..\..\..\src\scatter.hpp" />
     <ClInclude Include="..\..\..\..\src\select.hpp" />
     <ClInclude Include="..\..\..\..\src\session_base.hpp" />
     <ClInclude Include="..\..\..\..\src\signaler.hpp" />
@@ -146,21 +229,20 @@
     <ClInclude Include="..\..\..\..\src\tcp_address.hpp" />
     <ClInclude Include="..\..\..\..\src\tcp_connecter.hpp" />
     <ClInclude Include="..\..\..\..\src\tcp_listener.hpp" />
-    <ClInclude Include="..\..\..\..\src\thread.hpp" />
     <ClInclude Include="..\..\..\..\src\timers.hpp" />
+    <ClInclude Include="..\..\..\..\src\thread.hpp" />
     <ClInclude Include="..\..\..\..\src\trie.hpp" />
+    <ClInclude Include="..\..\..\..\src\tweetnacl.h" />
+    <ClInclude Include="..\..\..\..\src\udp_address.hpp" />
+    <ClInclude Include="..\..\..\..\src\udp_engine.hpp" />
     <ClInclude Include="..\..\..\..\src\v1_decoder.hpp" />
     <ClInclude Include="..\..\..\..\src\v1_encoder.hpp" />
-    <ClInclude Include="..\..\..\..\src\v1_protocol.hpp" />
     <ClInclude Include="..\..\..\..\src\windows.hpp" />
     <ClInclude Include="..\..\..\..\src\wire.hpp" />
     <ClInclude Include="..\..\..\..\src\xpub.hpp" />
-    <ClInclude Include="..\..\..\..\src\xrep.hpp" />
-    <ClInclude Include="..\..\..\..\src\xreq.hpp" />
     <ClInclude Include="..\..\..\..\src\xsub.hpp" />
     <ClInclude Include="..\..\..\..\src\ypipe.hpp" />
     <ClInclude Include="..\..\..\..\src\yqueue.hpp" />
-    <ClInclude Include="..\..\resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\src\address.cpp" />
@@ -172,10 +254,13 @@
     <ClCompile Include="..\..\..\..\src\dealer.cpp" />
     <ClCompile Include="..\..\..\..\src\decoder_allocators.cpp" />
     <ClCompile Include="..\..\..\..\src\devpoll.cpp" />
+    <ClCompile Include="..\..\..\..\src\dgram.cpp" />
+    <ClCompile Include="..\..\..\..\src\dish.cpp" />
     <ClCompile Include="..\..\..\..\src\dist.cpp" />
     <ClCompile Include="..\..\..\..\src\epoll.cpp" />
     <ClCompile Include="..\..\..\..\src\err.cpp" />
     <ClCompile Include="..\..\..\..\src\fq.cpp" />
+    <ClCompile Include="..\..\..\..\src\gather.cpp" />
     <ClCompile Include="..\..\..\..\src\gssapi_client.cpp" />
     <ClCompile Include="..\..\..\..\src\gssapi_mechanism_base.cpp" />
     <ClCompile Include="..\..\..\..\src\gssapi_server.cpp" />
@@ -206,11 +291,11 @@
     <ClCompile Include="..\..\..\..\src\plain_server.cpp" />
     <ClCompile Include="..\..\..\..\src\poll.cpp" />
     <ClCompile Include="..\..\..\..\src\poller_base.cpp" />
-    <ClCompile Include="..\..\..\..\src\precompiled.cpp" />
     <ClCompile Include="..\..\..\..\src\proxy.cpp" />
     <ClCompile Include="..\..\..\..\src\pub.cpp" />
     <ClCompile Include="..\..\..\..\src\pull.cpp" />
     <ClCompile Include="..\..\..\..\src\push.cpp" />
+    <ClCompile Include="..\..\..\..\src\radio.cpp" />
     <ClCompile Include="..\..\..\..\src\random.cpp" />
     <ClCompile Include="..\..\..\..\src\raw_decoder.cpp" />
     <ClCompile Include="..\..\..\..\src\raw_encoder.cpp" />
@@ -218,6 +303,7 @@
     <ClCompile Include="..\..\..\..\src\rep.cpp" />
     <ClCompile Include="..\..\..\..\src\req.cpp" />
     <ClCompile Include="..\..\..\..\src\router.cpp" />
+    <ClCompile Include="..\..\..\..\src\scatter.cpp" />
     <ClCompile Include="..\..\..\..\src\select.cpp" />
     <ClCompile Include="..\..\..\..\src\server.cpp" />
     <ClCompile Include="..\..\..\..\src\session_base.cpp" />
@@ -236,6 +322,11 @@
     <ClCompile Include="..\..\..\..\src\thread.cpp" />
     <ClCompile Include="..\..\..\..\src\timers.cpp" />
     <ClCompile Include="..\..\..\..\src\trie.cpp" />
+    <ClCompile Include="..\..\..\..\src\tweetnacl.c">
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\udp_address.cpp" />
+    <ClCompile Include="..\..\..\..\src\udp_engine.cpp" />
     <ClCompile Include="..\..\..\..\src\v1_decoder.cpp" />
     <ClCompile Include="..\..\..\..\src\v1_encoder.cpp" />
     <ClCompile Include="..\..\..\..\src\v2_decoder.cpp" />
